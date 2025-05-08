@@ -1,0 +1,53 @@
+memset:
+    Fills a block of memory with a specific
+    byte value.
+
+printf:
+    Prints formatted output to the standard
+    output (usually the terminal).
+
+malloc:
+    Allocates a block of memory of a given
+    size and returns a pointer to it.
+
+free:
+    Frees memory previously allocated by
+    malloc (or related functions).
+
+write:
+    Writes data from a buffer to a file descriptor
+    (e.g., terminal, file).
+
+usleep:
+    Suspends (pauses) program execution for a specified
+    number of microseconds.
+
+gettimeofday:
+    Gets the current time of day with microsecond precision.
+
+pthread_create:
+    Creates a new thread that runs a specified function.
+
+pthread_detach:
+    Marks a thread so that its resources are
+    automatically released when it finishes.
+
+pthread_join:
+    Waits for a specific thread to finish 
+    execution (and optionally collects its return value).
+
+pthread_mutex_init:
+    Initializes a mutex (mutual exclusion lock)
+    for thread synchronization.
+
+pthread_mutex_destroy:
+    Destroys a previously initialized mutex,
+    freeing any resources used.
+
+pthread_mutex_lock:
+    Locks a mutex to prevent other threads
+    from accessing shared data.
+
+pthread_mutex_unlock:
+    Unlocks a mutex, allowing other threads to
+    lock it and access the shared data.
