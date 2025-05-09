@@ -6,11 +6,15 @@
 #    By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/08 18:46:22 by bolcay            #+#    #+#              #
-#    Updated: 2025/05/08 19:49:32 by bolcay           ###   ########.fr        #
+#    Updated: 2025/05/09 16:43:39 by bolcay           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS = 
 
+OBJS = $(SRCS:.c=.o)
+NAME = philo
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -pthread
+RM = rm -f
+RM_DIR = rm -rf
