@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:51:35 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/11 21:34:50 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/11 22:45:50 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	create_philos(t_data *data)
 {
 }
 
-void	init_data(t_data *data, t_philo *philo, char **av)
+void	init_data(t_data *data, char **av)
 {
 	int	i;
 

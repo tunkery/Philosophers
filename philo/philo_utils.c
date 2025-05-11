@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 20:03:30 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/11 21:20:44 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/11 22:52:53 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,36 @@ long	get_current_time(void)
 	
 	gettimeofday(&time, NULL);
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
+}
+
+static int	ft_isalpha(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str || !str[i])
+		return (-1);
+	while (str[i])
+	{
+		if (!(str[i] >= 97 && str[i] <= 122) && !(str[i] >= 65 && str[i] <= 90))
+			return (-1);
+		i++;
+	}
+	return (0);
+}
+
+int	check_args(char **av)
+{
+	if (ft_atoi(av[1]) < 0 || ft_atoi(av[2]) < 0 || ft_atoi(av[3]) < 0 || ft_atoi(av[4]) < 0)
+		return (-1);
+	if (ft_isalpha(av[1]) == -1 || ft_isalpha(av[2]) == -1 || ft_isalpha(av[3]) == -1 || ft_isalpha(av[4]) == -1)
+		return (-1);
+	if (av[5])
+	{
+		if (ft_atoi(av[5]) < 0)
+			return (-1);
+		if (ft_isalpha(av[5]) == -1)
+			return (-1);
+	}
+	return (0);
 }

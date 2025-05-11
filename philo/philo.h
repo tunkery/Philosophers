@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:47:32 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/11 21:34:35 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/11 22:51:09 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ long	get_current_time(void);
 void	get_time(t_data *data);
 int		ft_strlen(const char *str);
 
-void	init_data(t_data *data, t_philo *philo, char **av);
+void	init_data(t_data *data, char **av);
+int		check_args(char **av);
 
 #endif
