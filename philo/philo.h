@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:47:32 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/12 15:15:46 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/05/12 16:42:24 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ typedef struct	s_philo
 	long			time_eaten;
 	bool		death;
 	pthread_t	philos;
-	pthread_mutex_t	time_lock;
-	pthread_mutex_t	death_lock;
 	pthread_mutex_t	fork_lock;
 }	t_philo;
 
@@ -46,6 +44,9 @@ typedef struct	s_data
 	long			start_time;
 	struct timeval	start;
 	long	long	time;
+	pthread_mutex_t	death_lock;
+	pthread_mutex_t	time_lock;
+	pthread_mutex_t	action_lock;
 }	t_data;
 
 int		ft_atoi(const char *str);
@@ -57,5 +58,7 @@ void	init_data(t_data *data, char **av);
 int		check_args(char **av);
 
 void	*routine(void *args, t_data *data);
+
+int 	ft_usleep(int ms, t_data *data);
 
 #endif

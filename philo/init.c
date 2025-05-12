@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:51:35 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/12 15:16:26 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/05/12 16:39:57 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	create_philos(t_data *data)
 	i = 0;
 	while (i < data->philo_no)
 	{
-		if (pthread_create(&data->philo->philos[i], NULL, &routine, NULL) != 0)
+		if (pthread_create(&data->philo[i].philos, NULL, &routine, NULL) != 0)
 			return (-1);
 		i++;
 	}
@@ -38,14 +38,14 @@ void	init_data(t_data *data, char **av)
 		data->eat_no = ft_atoi(av[5]);
 	else
 		data->eat_no = 0;
+	pthread_mutex_init(&data->death_lock, NULL);
+	pthread_mutex_init(&data->time_lock, NULL);
 	get_time(data);
 	data->philo = malloc(sizeof(t_philo) * data->philo_no);
 	if (!data->philo)
 		return (0);
 	while (i < data->philo_no)
 	{
-		pthread_mutex_init(&data->philo[i].time_lock, NULL);
-		pthread_mutex_init(&data->philo[i].death_lock, NULL);
 		pthread_mutex_init(&data->philo[i].fork_lock, NULL);
 		data->philo[i].meals_eaten = 0;
 		data->philo[i].time_eaten = 0;
