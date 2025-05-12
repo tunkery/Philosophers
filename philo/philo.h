@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:47:32 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/12 16:42:24 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/12 17:00:02 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ typedef struct	s_data
 	long			start_time;
 	struct timeval	start;
 	long	long	time;
+	pthread_mutex_t	*fork;
 	pthread_mutex_t	death_lock;
 	pthread_mutex_t	time_lock;
 	pthread_mutex_t	action_lock;

@@ -6,16 +6,23 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:53:07 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/12 16:49:02 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/12 17:12:07 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+void	philos_be_eatin(t_data *data)
+{
+	pthread_mutex_lock(&data->);
+}
+
 void	*routine(void *args, t_data *data)
 {
 	bool	death;
 	
+	if (data->philo->id % 2 == 0)
+		usleep(100);
 	pthread_mutex_lock(&data->time_lock);
 	data->philo->time_eaten = get_current_time();
 	pthread_mutex_unlock(&data->time_lock);
@@ -26,7 +33,7 @@ void	*routine(void *args, t_data *data)
 		pthread_mutex_unlock(&data->death_lock);
 		if (death)
 			break ;
-		
+		// here i will add the action function for thinking and sleeping
 	}
 }
 
