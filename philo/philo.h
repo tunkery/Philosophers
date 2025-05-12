@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:47:32 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/11 22:51:09 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/12 15:15:46 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,12 @@ typedef struct	s_philo
 	int			left_fork;
 	int			right_fork;
 	int			meals_eaten;
-	int			num;
+	long			time_eaten;
 	bool		death;
 	pthread_t	philos;
-	pthread_mutex_t	lock;
+	pthread_mutex_t	time_lock;
+	pthread_mutex_t	death_lock;
+	pthread_mutex_t	fork_lock;
 }	t_philo;
 
 typedef struct	s_data
@@ -53,5 +55,7 @@ int		ft_strlen(const char *str);
 
 void	init_data(t_data *data, char **av);
 int		check_args(char **av);
+
+void	*routine(void *args, t_data *data);
 
 #endif

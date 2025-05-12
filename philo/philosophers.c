@@ -3,14 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:53:07 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/11 23:03:20 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/12 15:27:33 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	*routine(void *args, t_data *data)
+{
+	bool	death;
+	
+	pthread_mutex_lock(&data->philo->time_lock);
+	data->philo->time_eaten = get_current_time();
+	pthread_mutex_unlock(&data->philo->time_lock);
+	while (1)
+	{
+		pthread_mutex_lock(&data->philo->death_lock);
+		death = data->philo->death;
+		pthread_mutex_unlock(&data->philo->death_lock);
+		if (death)
+			break ;
+	}
+}
+
+int	before_routine(t_data *data)
+{
+	
+}
 
 int	main(int ac, char **av)
 {

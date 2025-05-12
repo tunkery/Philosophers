@@ -3,17 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:51:35 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/11 22:45:50 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/12 15:16:26 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	create_philos(t_data *data)
+int	create_philos(t_data *data)
 {
+	int	i;
+
+	i = 0;
+	while (i < data->philo_no)
+	{
+		if (pthread_create(&data->philo->philos[i], NULL, &routine, NULL) != 0)
+			return (-1);
+		i++;
+	}
 }
 
 void	init_data(t_data *data, char **av)
@@ -35,9 +44,18 @@ void	init_data(t_data *data, char **av)
 		return (0);
 	while (i < data->philo_no)
 	{
-		pthread_mutex_init(&data->philo[i].lock, NULL);
+		pthread_mutex_init(&data->philo[i].time_lock, NULL);
+		pthread_mutex_init(&data->philo[i].death_lock, NULL);
+		pthread_mutex_init(&data->philo[i].fork_lock, NULL);
 		data->philo[i].meals_eaten = 0;
+		data->philo[i].time_eaten = 0;
 		data->philo[i].id = i + 1;
 		data->philo[i].death = false;
+		data->philo[i].left_fork = i + 1;
+		if (i + 1 < data->philo_no)
+			data->philo[i].right_fork = i + 2;
+		else
+			data->philo[i].right_fork = 1;
+		i++;
 	}
 }
