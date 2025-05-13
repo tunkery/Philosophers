@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:47:32 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/13 17:45:35 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/13 19:35:46 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef struct	s_philo
 	// bool		death;
 	pthread_t	philos;
 	pthread_mutex_t	fork_lock;
+	struct s_data	*data;
 }	t_philo;
 
 typedef struct	s_data
@@ -66,11 +67,11 @@ void	*routine(void *args);
 
 int 	ft_usleep(int ms, t_data *data);
 
-void	philo_action(t_data *data, char *message);
+void	philo_action(t_philo *philo, char *message);
 
 void	create_philos(t_data *data);
-int		philos_eat(t_data *data);
-void	philos_be_eatin(t_data *data);
+int		philos_eat(t_philo *philo);
+void	philos_be_eatin(t_philo *philo);
 void	*monitoring(void *arg);
 
 #endif

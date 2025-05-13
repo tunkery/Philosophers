@@ -6,39 +6,60 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:53:07 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/13 17:53:06 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/13 19:37:53 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	philos_be_eatin(t_data *data)
+void	philos_be_eatin(t_philo *philo)
 {
 	int	l_fork;
 	int	r_fork;
+	int	check;
+	t_data	*data;
 
-	l_fork = data->philo->left_fork;
-	r_fork = data->philo->right_fork;
+	data = philo->data;
+	check = 0;
+	if (data->philo->right_fork == 1)
+	{
+		l_fork = data->philo->right_fork;
+		r_fork = data->philo->left_fork;
+	}
+	else
+	{
+		l_fork = data->philo->left_fork;
+		r_fork = data->philo->right_fork;
+	}
 	pthread_mutex_lock(&data->fork[l_fork]);
-	philo_action(data, "has taken a fork");
+	philo_action(philo, "has taken a fork");
 	pthread_mutex_lock(&data->fork[r_fork]);
-	philo_action(data, "has taken a fork");
-	philo_action(data, "is eating");
+	philo_action(philo, "has taken a fork");
+	philo_action(philo, "is eating");
 	pthread_mutex_lock(&data->upd_lock);
 	data->philo->meals_eaten += 1;
 	data->philo->time_eaten = get_current_time();
 	pthread_mutex_unlock(&data->upd_lock);
-	ft_usleep(data->eat_ti, data);
+	check = ft_usleep(data->eat_ti, data);
+	if (check < 0)
+	{
+		pthread_mutex_lock(&data->death_lock);
+		data->death = true;
+		pthread_mutex_unlock(&data->death_lock);
+	}
 	pthread_mutex_unlock(&data->fork[l_fork]);
 	pthread_mutex_unlock(&data->fork[r_fork]);
 }
 
 void	*routine(void *args)
 {
+	t_philo	*philo;
 	t_data	*data;
 	bool	death;
+	int		check;
 	
-	data = args;
+	philo = args;
+	data = philo->data;
 	if (data->philo->id % 2 == 0)
 		usleep(100);
 	pthread_mutex_lock(&data->time_lock);
@@ -51,30 +72,38 @@ void	*routine(void *args)
 		pthread_mutex_unlock(&data->death_lock);
 		if (death)
 			break ;
-		philos_eat(data);
-		philo_action(data, "is sleeping");
-		ft_usleep(data->sle_ti, data);
-		philo_action(data, "is thinking");
+		philos_eat(philo);
+		philo_action(philo, "is sleeping");
+		check = ft_usleep(data->sle_ti, data);
+		if (check < 0)
+		{
+			pthread_mutex_lock(&data->death_lock);
+			data->death = true;
+			pthread_mutex_unlock(&data->death_lock);
+		}
+		philo_action(philo, "is thinking");
 	}
 	return (NULL);
 }
 
-int	philos_eat(t_data *data)
+int	philos_eat(t_philo *philo)
 {
+	t_data *data;
 	int	l_fork;
 
+	data = philo->data;
 	l_fork = data->philo->left_fork;
 	if (data->death)
 		return (-1);
 	if (data->philo_no == 1)
 	{
 		pthread_mutex_lock(&data->fork[l_fork]);
-		philo_action(data, "has taken a fork");
+		philo_action(philo, "has taken a fork");
 		ft_usleep(data->die_ti, data);
 		pthread_mutex_unlock(&data->fork[l_fork]);
 		return (0);
 	}
-	philos_be_eatin(data);
+	philos_be_eatin(philo);
 	return (0);
 }
 

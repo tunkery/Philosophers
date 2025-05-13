@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:51:35 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/13 17:45:47 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/13 19:51:53 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,11 +85,11 @@ void	create_philos(t_data *data)
 	i = 0;
 	while (i < data->philo_no)
 	{
-		if (pthread_create(&data->philo[i].philos, NULL, routine, data) != 0)
+		if (pthread_create(&data->philo[i].philos, NULL, routine, &data->philo[i]) != 0)
 			return ;
 		i++;
 	}
-	pthread_create(&data->monitor, NULL, &monitoring, &data);
+	pthread_create(&data->monitor, NULL, monitoring, &data->philo[i]);
 	i = 0;
 	while (i < data->philo_no)
 	{
@@ -129,6 +129,7 @@ void	init_data(t_data *data, char **av)
 	while (i < data->philo_no)
 	{
 		pthread_mutex_init(&data->fork[i], NULL);
+		data->philo[i].data = data;
 		data->philo[i].meals_eaten = 0;
 		data->philo[i].time_eaten = 0;
 		data->philo[i].id = i + 1;

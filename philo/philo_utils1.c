@@ -6,17 +6,19 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:11:15 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/13 17:51:43 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/13 19:48:50 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	philo_action(t_data *data, char *message)
+void	philo_action(t_philo *philo, char *message)
 {
+    t_data *data;
     bool    death;
     long    c_time;
 
+    data = philo->data;
     pthread_mutex_lock(&data->death_lock);
     death = data->death;
     pthread_mutex_unlock(&data->death_lock);
@@ -24,7 +26,7 @@ void	philo_action(t_data *data, char *message)
     {
         pthread_mutex_lock(&data->action_lock);
         c_time = get_current_time();
-        printf("%ld philo number: %d %s\n", c_time, data->philo->id, message);
+        printf("%ld philo number: %d %s\n", c_time, philo->id, message);
         pthread_mutex_unlock(&data->action_lock);
     }
 }
