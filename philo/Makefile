@@ -3,18 +3,35 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+         #
+#    By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/08 18:46:22 by bolcay            #+#    #+#              #
-#    Updated: 2025/05/09 16:43:39 by bolcay           ###   ########.fr        #
+#    Updated: 2025/05/13 17:42:07 by batuhan          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS = 
+SRCS = init.c philosophers.c philo_utils.c philo_utils1.c
 
 OBJS = $(SRCS:.c=.o)
 NAME = philo
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -pthread
 RM = rm -f
-RM_DIR = rm -rf
+
+all: $(NAME)
+
+$(NAME): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+
+%.o: %.c philo.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	$(RM) $(OBJS)
+
+fclean:
+	$(RM) $(NAME)
+
+re: fclean all
+
+.PHONY: all clean fclean re

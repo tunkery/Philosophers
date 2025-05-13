@@ -6,13 +6,13 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:51:35 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/13 17:06:36 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/13 17:45:47 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_strncmp(const char *s1, const char *s2, size_t c)
+static int	ft_strncmp(const char *s1, const char *s2, size_t c)
 {
 	size_t	i;
 
@@ -28,10 +28,10 @@ int	ft_strncmp(const char *s1, const char *s2, size_t c)
 	return (0);
 }
 
-void	print_message(t_data *data, char *message, int i)
+static void	print_message(t_data *data, char *message, int i)
 {
 	pthread_mutex_lock(&data->msg_lock);
-	if (!data->death || ft_strcnmp(message, "died", 4) == 0)
+	if (!data->death || ft_strncmp(message, "died", 4) == 0)
 		printf("%ld %d %s\n", get_current_time() - data->start_time, data->philo[i].id, message);
 	pthread_mutex_unlock(&data->msg_lock);
 }
@@ -52,7 +52,7 @@ void	*monitoring(void *arg)
 			if (get_current_time() - m->philo[i].time_eaten > m->die_ti)
 			{
 				m->death = true;
-				print_message(&m, "died", i);
+				print_message(m, "died", i);
 				return (NULL);
 			}
 			i++;
@@ -78,17 +78,26 @@ void	*monitoring(void *arg)
 	return (NULL);
 }
 
-int	create_philos(t_data *data)
+void	create_philos(t_data *data)
 {
 	int	i;
 
 	i = 0;
 	while (i < data->philo_no)
 	{
-		if (pthread_create(&data->philo[i].philos, NULL, &routine, NULL) != 0)
-			return (-1);
+		if (pthread_create(&data->philo[i].philos, NULL, routine, data) != 0)
+			return ;
 		i++;
 	}
+	pthread_create(&data->monitor, NULL, &monitoring, &data);
+	i = 0;
+	while (i < data->philo_no)
+	{
+		if (pthread_join(data->philo[i].philos, NULL) == 0)
+			return ;
+		i++;
+	}
+	pthread_join(data->monitor, NULL);
 }
 
 void	init_data(t_data *data, char **av)
@@ -113,10 +122,10 @@ void	init_data(t_data *data, char **av)
 	get_time(data);
 	data->philo = malloc(sizeof(t_philo) * data->philo_no);
 	if (!data->philo)
-		return (0);
+		return ;
 	data->fork = malloc(sizeof(pthread_mutex_t) * data->philo_no);
 	if (!data->fork)
-		return (0);
+		return ;
 	while (i < data->philo_no)
 	{
 		pthread_mutex_init(&data->fork[i], NULL);

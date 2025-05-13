@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:53:07 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/13 15:26:50 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/13 17:53:06 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,19 @@ void	philos_be_eatin(t_data *data)
 	philo_action(data, "is eating");
 	pthread_mutex_lock(&data->upd_lock);
 	data->philo->meals_eaten += 1;
-	data->philo->time_eaten = get_current_time;
+	data->philo->time_eaten = get_current_time();
 	pthread_mutex_unlock(&data->upd_lock);
 	ft_usleep(data->eat_ti, data);
 	pthread_mutex_unlock(&data->fork[l_fork]);
 	pthread_mutex_unlock(&data->fork[r_fork]);
 }
 
-void	*routine(void *args, t_data *data)
+void	*routine(void *args)
 {
+	t_data	*data;
 	bool	death;
 	
+	data = args;
 	if (data->philo->id % 2 == 0)
 		usleep(100);
 	pthread_mutex_lock(&data->time_lock);
@@ -45,29 +47,45 @@ void	*routine(void *args, t_data *data)
 	while (1)
 	{
 		pthread_mutex_lock(&data->death_lock);
-		death = data->philo->death;
+		death = data->death;
 		pthread_mutex_unlock(&data->death_lock);
 		if (death)
 			break ;
-		// here i will add the action function for thinking and sleeping
+		philos_eat(data);
+		philo_action(data, "is sleeping");
+		ft_usleep(data->sle_ti, data);
+		philo_action(data, "is thinking");
 	}
+	return (NULL);
 }
 
-int	before_routine(t_data *data)
+int	philos_eat(t_data *data)
 {
-	
+	int	l_fork;
+
+	l_fork = data->philo->left_fork;
+	if (data->death)
+		return (-1);
+	if (data->philo_no == 1)
+	{
+		pthread_mutex_lock(&data->fork[l_fork]);
+		philo_action(data, "has taken a fork");
+		ft_usleep(data->die_ti, data);
+		pthread_mutex_unlock(&data->fork[l_fork]);
+		return (0);
+	}
+	philos_be_eatin(data);
+	return (0);
 }
 
 int	main(int ac, char **av)
 {
 	t_data	*data;
 
-	if (ac < 4 || check_args(av) == -1)
+	if (ac < 4)
 	{
 		if (ac < 4)
-			printf("girl, you're supposed to give more arguments??!?!?\n");
-		else
-			printf("Invalid argument\n");
+			printf("girl, you're supposed to give more arguments?\n");
 		return (0);
 	}
 	data = malloc(sizeof(t_data));
@@ -75,5 +93,6 @@ int	main(int ac, char **av)
 		return (0);
 	// argument order: number_of_philosophers | time_to_die | time_to_eat | time_to_sleep
 	init_data(data, av);
+	create_philos(data);
 	return (0);
 }
