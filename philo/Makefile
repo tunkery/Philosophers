@@ -6,7 +6,7 @@
 #    By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/08 18:46:22 by bolcay            #+#    #+#              #
-#    Updated: 2025/05/13 17:42:07 by batuhan          ###   ########.fr        #
+#    Updated: 2025/05/13 17:56:35 by batuhan          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ $(NAME): $(OBJS)
 clean:
 	$(RM) $(OBJS)
 
-fclean:
+fclean: clean
 	$(RM) $(NAME)
 
 re: fclean all
