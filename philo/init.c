@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:51:35 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/13 19:51:53 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/13 20:25:22 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,11 +85,11 @@ void	create_philos(t_data *data)
 	i = 0;
 	while (i < data->philo_no)
 	{
-		if (pthread_create(&data->philo[i].philos, NULL, routine, &data->philo[i]) != 0)
+		if (pthread_create(&data->philo[i].philos, NULL, &routine, &data->philo[i]) != 0)
 			return ;
 		i++;
 	}
-	pthread_create(&data->monitor, NULL, monitoring, &data->philo[i]);
+	pthread_create(&data->monitor, NULL, &monitoring, data);
 	i = 0;
 	while (i < data->philo_no)
 	{
@@ -119,7 +119,8 @@ void	init_data(t_data *data, char **av)
 	pthread_mutex_init(&data->action_lock, NULL);
 	pthread_mutex_init(&data->upd_lock, NULL);
 	pthread_mutex_init(&data->msg_lock, NULL);
-	get_time(data);
+	data->start_time = get_current_time();
+	// get_time(data);
 	data->philo = malloc(sizeof(t_philo) * data->philo_no);
 	if (!data->philo)
 		return ;

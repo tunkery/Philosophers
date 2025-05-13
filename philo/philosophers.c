@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:53:07 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/13 19:37:53 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/13 20:18:33 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,9 @@ void	philos_be_eatin(t_philo *philo)
 {
 	int	l_fork;
 	int	r_fork;
-	int	check;
 	t_data	*data;
 
 	data = philo->data;
-	check = 0;
 	if (data->philo->right_fork == 1)
 	{
 		l_fork = data->philo->right_fork;
@@ -40,13 +38,7 @@ void	philos_be_eatin(t_philo *philo)
 	data->philo->meals_eaten += 1;
 	data->philo->time_eaten = get_current_time();
 	pthread_mutex_unlock(&data->upd_lock);
-	check = ft_usleep(data->eat_ti, data);
-	if (check < 0)
-	{
-		pthread_mutex_lock(&data->death_lock);
-		data->death = true;
-		pthread_mutex_unlock(&data->death_lock);
-	}
+	ft_usleep(data->eat_ti, data);
 	pthread_mutex_unlock(&data->fork[l_fork]);
 	pthread_mutex_unlock(&data->fork[r_fork]);
 }
@@ -56,7 +48,6 @@ void	*routine(void *args)
 	t_philo	*philo;
 	t_data	*data;
 	bool	death;
-	int		check;
 	
 	philo = args;
 	data = philo->data;
@@ -74,13 +65,7 @@ void	*routine(void *args)
 			break ;
 		philos_eat(philo);
 		philo_action(philo, "is sleeping");
-		check = ft_usleep(data->sle_ti, data);
-		if (check < 0)
-		{
-			pthread_mutex_lock(&data->death_lock);
-			data->death = true;
-			pthread_mutex_unlock(&data->death_lock);
-		}
+		ft_usleep(data->sle_ti, data);
 		philo_action(philo, "is thinking");
 	}
 	return (NULL);

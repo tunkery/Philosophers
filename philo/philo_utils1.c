@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:11:15 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/13 19:48:50 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/13 20:09:43 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ void	philo_action(t_philo *philo, char *message)
     if (!death)
     {
         pthread_mutex_lock(&data->action_lock);
-        c_time = get_current_time();
-        printf("%ld philo number: %d %s\n", c_time, philo->id, message);
+        c_time = get_current_time() - data->start_time;
+        printf("%ld %d %s\n", c_time, philo->id, message);
         pthread_mutex_unlock(&data->action_lock);
     }
 }
@@ -34,8 +34,10 @@ void	philo_action(t_philo *philo, char *message)
 int ft_usleep(int ms, t_data *data)
 {
     bool    death;
+    long    c_time;
     
-    while ((get_current_time() - data->start_time) < ms)
+    c_time = get_current_time();
+    while ((get_current_time() - c_time) < ms)
     {
         pthread_mutex_lock(&data->death_lock);
         death = data->death;
