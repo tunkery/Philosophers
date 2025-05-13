@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:11:15 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/13 20:09:43 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/13 20:38:15 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int ft_usleep(int ms, t_data *data)
             return (-1);
         }
         pthread_mutex_unlock(&data->death_lock);
-        usleep(500);
+        usleep(100);
     }
     return (0);
 }

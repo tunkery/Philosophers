@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:51:35 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/13 20:25:22 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/13 22:04:45 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,11 @@ static int	ft_strncmp(const char *s1, const char *s2, size_t c)
 	return (0);
 }
 
-static void	print_message(t_data *data, char *message, int i)
+static void	print_message(t_philo *philo, char *message, int i)
 {
+	t_data	*data;
+
+	data = philo->data;
 	pthread_mutex_lock(&data->msg_lock);
 	if (!data->death || ft_strncmp(message, "died", 4) == 0)
 		printf("%ld %d %s\n", get_current_time() - data->start_time, data->philo[i].id, message);
@@ -38,40 +41,56 @@ static void	print_message(t_data *data, char *message, int i)
 
 void	*monitoring(void *arg)
 {
-	t_data *m;
+	t_philo *m;
+	t_philo *p;
+	t_data	*data;
 	int		i;
-	bool	all_full;
+	// bool	all_full;
+	int		full_count;
 
 	m = arg;
+	data = m->data;
 	i = 0;
-	all_full = true;
-	while (!m->death)
+	// all_full = true;
+	full_count = 0;
+	while (!data->death)
 	{
-		while (i < m->philo_no)
+		i = 0;
+		full_count = 0;
+		while (i < data->philo_no)
 		{
-			if (get_current_time() - m->philo[i].time_eaten > m->die_ti)
+			p = &data->philo[i];
+			pthread_mutex_lock(&data->upd_lock);
+			if (get_current_time() - p->time_eaten > data->die_ti)
 			{
-				m->death = true;
-				print_message(m, "died", i);
+				data->death = true;
+				print_message(p, "died", i);
+				pthread_mutex_unlock(&data->upd_lock);
 				return (NULL);
 			}
+			if (data->eat_no > 0 && p->meals_eaten >= data->eat_no)
+				full_count++;
+			pthread_mutex_unlock(&data->upd_lock);
 			i++;
 		}
-		if (m->eat_no > 0)
+		// i = 0;
+		if (data->eat_no > 0 && full_count == data->philo_no)
 		{
-			i = 0;
-			while (i < m->philo_no)
-			{
-				if (m->philo[i].meals_eaten < m->eat_no)
-					all_full = false;
-				i++;
-			}
-			if (all_full)
-			{
-				m->death = true;
-				return (NULL);
-			}
-			i = 0;
+			pthread_mutex_lock(&data->upd_lock);
+			data->death = true;
+			pthread_mutex_unlock(&data->upd_lock);
+			return (NULL);
+			// while (i < data->philo_no)
+			// {
+			// 	if (p->meals_eaten < data->eat_no)
+			// 		all_full = false;
+			// 	i++;
+			// }
+			// if (all_full)
+			// {
+			// 	data->death = true;
+			// 	return (NULL);
+			// }
 		}
 		usleep(1000);
 	}
@@ -89,7 +108,7 @@ void	create_philos(t_data *data)
 			return ;
 		i++;
 	}
-	pthread_create(&data->monitor, NULL, &monitoring, data);
+	pthread_create(&data->monitor, NULL, &monitoring, &data->philo[0]);
 	i = 0;
 	while (i < data->philo_no)
 	{
@@ -109,10 +128,9 @@ void	init_data(t_data *data, char **av)
 	data->die_ti = ft_atoi(av[2]);
 	data->eat_ti = ft_atoi(av[3]);
 	data->sle_ti = ft_atoi(av[4]);
+	data->eat_no = 0;
 	if (av[5])
 		data->eat_no = ft_atoi(av[5]);
-	else
-		data->eat_no = 0;
 	data->death = false;
 	pthread_mutex_init(&data->death_lock, NULL);
 	pthread_mutex_init(&data->time_lock, NULL);
@@ -132,13 +150,13 @@ void	init_data(t_data *data, char **av)
 		pthread_mutex_init(&data->fork[i], NULL);
 		data->philo[i].data = data;
 		data->philo[i].meals_eaten = 0;
-		data->philo[i].time_eaten = 0;
+		data->philo[i].time_eaten = data->start_time;
 		data->philo[i].id = i + 1;
-		data->philo[i].left_fork = i + 1;
+		data->philo[i].left_fork = i;
 		if (i + 1 < data->philo_no)
-			data->philo[i].right_fork = i + 2;
+			data->philo[i].right_fork = (i + 1) % data->philo_no;
 		else
-			data->philo[i].right_fork = 1;
+			data->philo[i].right_fork = 0;
 		i++;
 	}
 }

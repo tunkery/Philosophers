@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:53:07 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/13 20:18:33 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/13 22:14:03 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,27 @@ void	philos_be_eatin(t_philo *philo)
 	t_data	*data;
 
 	data = philo->data;
-	if (data->philo->right_fork == 1)
+	if (philo->id % 2 == 0)
 	{
-		l_fork = data->philo->right_fork;
-		r_fork = data->philo->left_fork;
+		l_fork = philo->right_fork;
+		r_fork = philo->left_fork;
 	}
 	else
 	{
-		l_fork = data->philo->left_fork;
-		r_fork = data->philo->right_fork;
+		l_fork = philo->left_fork;
+		r_fork = philo->right_fork;
 	}
 	pthread_mutex_lock(&data->fork[l_fork]);
 	philo_action(philo, "has taken a fork");
 	pthread_mutex_lock(&data->fork[r_fork]);
 	philo_action(philo, "has taken a fork");
-	philo_action(philo, "is eating");
+	// philo_action(philo, "is eating");
 	pthread_mutex_lock(&data->upd_lock);
-	data->philo->meals_eaten += 1;
-	data->philo->time_eaten = get_current_time();
+	philo->time_eaten = get_current_time();
+	philo->meals_eaten += 1;
+	// philo->time_eaten = get_current_time();
 	pthread_mutex_unlock(&data->upd_lock);
+	philo_action(philo, "is eating");
 	ft_usleep(data->eat_ti, data);
 	pthread_mutex_unlock(&data->fork[l_fork]);
 	pthread_mutex_unlock(&data->fork[r_fork]);
@@ -51,10 +53,10 @@ void	*routine(void *args)
 	
 	philo = args;
 	data = philo->data;
-	if (data->philo->id % 2 == 0)
-		usleep(100);
+	if (philo->id % 2 == 1)
+		usleep(1500);
 	pthread_mutex_lock(&data->time_lock);
-	data->philo->time_eaten = get_current_time();
+	philo->time_eaten = get_current_time();
 	pthread_mutex_unlock(&data->time_lock);
 	while (1)
 	{
@@ -77,7 +79,7 @@ int	philos_eat(t_philo *philo)
 	int	l_fork;
 
 	data = philo->data;
-	l_fork = data->philo->left_fork;
+	l_fork = philo->left_fork;
 	if (data->death)
 		return (-1);
 	if (data->philo_no == 1)
