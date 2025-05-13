@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:53:07 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/12 17:12:07 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/13 15:26:50 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,23 @@
 
 void	philos_be_eatin(t_data *data)
 {
-	pthread_mutex_lock(&data->);
+	int	l_fork;
+	int	r_fork;
+
+	l_fork = data->philo->left_fork;
+	r_fork = data->philo->right_fork;
+	pthread_mutex_lock(&data->fork[l_fork]);
+	philo_action(data, "has taken a fork");
+	pthread_mutex_lock(&data->fork[r_fork]);
+	philo_action(data, "has taken a fork");
+	philo_action(data, "is eating");
+	pthread_mutex_lock(&data->upd_lock);
+	data->philo->meals_eaten += 1;
+	data->philo->time_eaten = get_current_time;
+	pthread_mutex_unlock(&data->upd_lock);
+	ft_usleep(data->eat_ti, data);
+	pthread_mutex_unlock(&data->fork[l_fork]);
+	pthread_mutex_unlock(&data->fork[r_fork]);
 }
 
 void	*routine(void *args, t_data *data)

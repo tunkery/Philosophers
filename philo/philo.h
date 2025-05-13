@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:47:32 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/12 17:00:02 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/13 16:28:04 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ typedef struct	s_philo
 	int			right_fork;
 	int			meals_eaten;
 	long			time_eaten;
-	bool		death;
+	// bool		death;
 	pthread_t	philos;
 	pthread_mutex_t	fork_lock;
 }	t_philo;
@@ -44,10 +44,13 @@ typedef struct	s_data
 	long			start_time;
 	struct timeval	start;
 	long	long	time;
+	bool			death;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	death_lock;
 	pthread_mutex_t	time_lock;
 	pthread_mutex_t	action_lock;
+	pthread_mutex_t	upd_lock;
+	pthread_mutex_t	msg_lock;
 }	t_data;
 
 int		ft_atoi(const char *str);
@@ -61,5 +64,7 @@ int		check_args(char **av);
 void	*routine(void *args, t_data *data);
 
 int 	ft_usleep(int ms, t_data *data);
+
+void	philo_action(t_data *data, char *message);
 
 #endif
