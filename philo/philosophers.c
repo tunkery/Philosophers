@@ -6,7 +6,7 @@
 /*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:53:07 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/13 22:14:03 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/13 22:27:21 by batuhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void	*routine(void *args)
 	t_philo	*philo;
 	t_data	*data;
 	bool	death;
+	// long	think_time;
 	
 	philo = args;
 	data = philo->data;
@@ -69,6 +70,10 @@ void	*routine(void *args)
 		philo_action(philo, "is sleeping");
 		ft_usleep(data->sle_ti, data);
 		philo_action(philo, "is thinking");
+		// think_time = data->die_ti - data->eat_ti - data->sle_ti;
+		// if (think_time < 0)
+		// 	think_time = 1;
+		// ft_usleep(think_time, data);
 	}
 	return (NULL);
 }
