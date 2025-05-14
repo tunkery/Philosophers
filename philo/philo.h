@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:47:32 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/13 21:05:34 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/14 12:41:56 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,5 +73,6 @@ void	create_philos(t_data *data);
 int		philos_eat(t_philo *philo);
 void	philos_be_eatin(t_philo *philo);
 void	*monitoring(void *arg);
+void	clean_up(t_data *data);
 
 #endif

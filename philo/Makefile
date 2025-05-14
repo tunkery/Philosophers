@@ -3,14 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+         #
+#    By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/08 18:46:22 by bolcay            #+#    #+#              #
-#    Updated: 2025/05/13 17:57:19 by batuhan          ###   ########.fr        #
+#    Updated: 2025/05/14 12:38:15 by bolcay           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS = init.c philosophers.c philo_utils.c philo_utils1.c
+SRCS = init.c philosophers.c philo_utils.c philo_utils1.c clean_up.c
 
 OBJS = $(SRCS:.c=.o)
 NAME = philo

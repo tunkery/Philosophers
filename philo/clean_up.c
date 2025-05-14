@@ -1,0 +1,32 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   clean_up.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/14 12:35:26 by bolcay            #+#    #+#             */
+/*   Updated: 2025/05/14 12:41:33 by bolcay           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "philo.h"
+
+void	clean_up(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	pthread_mutex_destroy(&data->death_lock);
+	pthread_mutex_destroy(&data->time_lock);
+	pthread_mutex_destroy(&data->action_lock);
+	pthread_mutex_destroy(&data->upd_lock);
+	pthread_mutex_destroy(&data->msg_lock);
+	while (i < data->philo_no)
+	{
+		pthread_mutex_destroy(&data->fork[i]);
+		i++;
+	}
+	free(data->philo);
+	free(data->fork);
+}

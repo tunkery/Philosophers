@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:51:35 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/13 22:04:45 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/05/14 13:10:57 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	*monitoring(void *arg)
 		{
 			p = &data->philo[i];
 			pthread_mutex_lock(&data->upd_lock);
-			if (get_current_time() - p->time_eaten > data->die_ti)
+			if ((get_current_time() - p->time_eaten +1)> data->die_ti)
 			{
 				data->death = true;
 				print_message(p, "died", i);
