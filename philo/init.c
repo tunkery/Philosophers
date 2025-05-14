@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:51:35 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/14 15:47:53 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/05/14 18:25:55 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,36 +46,38 @@ void	*monitoring(void *arg)
 	t_data	*data;
 	int		i;
 	int		full_count;
+	int		check;
 
 	m = arg;
 	data = m->data;
 	i = 0;
+	check = 0;
 	full_count = 0;
-	while (!data->death)
+	while (check == 0)
 	{
 		i = 0;
 		full_count = 0;
 		while (i < data->philo_no)
 		{
 			p = &data->philo[i];
-			pthread_mutex_lock(&data->death_lock);
-			if ((get_current_time() - p->time_eaten + 1) > data->die_ti)
+			pthread_mutex_lock(&data->upd_lock);
+			if ((get_current_time() - p->time_eaten) > data->die_ti)
 			{
-				data->death = true;
+				check = 1;
 				print_message(p, "died", i);
-				pthread_mutex_unlock(&data->death_lock);
+				pthread_mutex_unlock(&data->upd_lock);
 				return (NULL);
 			}
+			pthread_mutex_unlock(&data->upd_lock);
 			if (data->eat_no > 0 && p->meals_eaten >= data->eat_no)
 				full_count++;
-			pthread_mutex_unlock(&data->death_lock);
 			i++;
 		}
 		if (data->eat_no > 0 && full_count == data->philo_no)
 		{
-			pthread_mutex_lock(&data->death_lock);
+			pthread_mutex_lock(&data->upd_lock);
 			data->death = true;
-			pthread_mutex_unlock(&data->death_lock);
+			pthread_mutex_unlock(&data->upd_lock);
 			return (NULL);
 		}
 		usleep(1000);
@@ -123,6 +125,8 @@ void	init_data(t_data *data, char **av)
 	pthread_mutex_init(&data->action_lock, NULL);
 	pthread_mutex_init(&data->upd_lock, NULL);
 	pthread_mutex_init(&data->msg_lock, NULL);
+	pthread_mutex_init(&data->sleep_lock, NULL);
+	pthread_mutex_init(&data->think_lock, NULL);
 	data->start_time = get_current_time();
 	// get_time(data);
 	data->philo = malloc(sizeof(t_philo) * data->philo_no);

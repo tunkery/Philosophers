@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:35:26 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/14 12:41:33 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/05/14 18:08:22 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void	clean_up(t_data *data)
 	pthread_mutex_destroy(&data->action_lock);
 	pthread_mutex_destroy(&data->upd_lock);
 	pthread_mutex_destroy(&data->msg_lock);
+	pthread_mutex_destroy(&data->sleep_lock);
+	pthread_mutex_destroy(&data->think_lock);
 	while (i < data->philo_no)
 	{
 		pthread_mutex_destroy(&data->fork[i]);

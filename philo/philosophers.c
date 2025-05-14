@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:53:07 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/14 16:17:59 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/05/14 18:29:11 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ void	philos_be_eatin(t_philo *philo)
 	t_data	*data;
 
 	data = philo->data;
-	if (philo->right_fork == 0)
-	{
-		l_fork = philo->right_fork;
-		r_fork = philo->left_fork;
-	}
-	else if (philo->id % 2 == 0)
+	// if (philo->right_fork == 0)
+	// {
+	// 	l_fork = philo->right_fork;
+	// 	r_fork = philo->left_fork;
+	// }
+	if (philo->id % 2 == 0)
 	{
 		l_fork = philo->right_fork;
 		r_fork = philo->left_fork;
@@ -41,7 +41,7 @@ void	philos_be_eatin(t_philo *philo)
 	philo_action(philo, "has taken a fork");
 	pthread_mutex_lock(&data->upd_lock);
 	philo->time_eaten = get_current_time();
-	philo->meals_eaten += 1;
+	philo->meals_eaten++;
 	pthread_mutex_unlock(&data->upd_lock);
 	philo_action(philo, "is eating");
 	ft_usleep(data->eat_ti, data);
@@ -58,7 +58,7 @@ void	*routine(void *args)
 	philo = args;
 	data = philo->data;
 	if (philo->id % 2 == 0)
-		usleep(1500);
+		usleep(1000);
 	// else
 	// 	usleep(100);
 	pthread_mutex_lock(&data->time_lock);
@@ -76,6 +76,7 @@ void	*routine(void *args)
 		ft_usleep(data->sle_ti, data);
 		// usleep(50);
 		philo_action(philo, "is thinking");
+		// usleep(50);
 		// ft_usleep(data->sle_ti, data);
 	}
 	return (NULL);
@@ -87,9 +88,14 @@ int	philos_eat(t_philo *philo)
 	int	l_fork;
 
 	data = philo->data;
-	l_fork = philo->left_fork;
 	if (data->death)
 		return (-1);
+	l_fork = philo->left_fork;
+	usleep(50);
+	pthread_mutex_lock(&data->upd_lock);
+	if (philo->meals_eaten == data->eat_no && data->eat_no != 0)
+		return (0);
+	pthread_mutex_unlock(&data->upd_lock);
 	if (data->philo_no == 1)
 	{
 		pthread_mutex_lock(&data->fork[l_fork]);
