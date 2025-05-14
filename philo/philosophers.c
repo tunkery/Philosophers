@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:53:07 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/14 13:53:06 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/05/14 16:10:14 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,19 @@ void	philos_be_eatin(t_philo *philo)
 	t_data	*data;
 
 	data = philo->data;
-	if (philo->id % 2 == 0)
+	if (philo->right_fork == 0)
+	{
+		l_fork = philo->right_fork;
+		r_fork = philo->left_fork;
+	}
+	else if (philo->id % 2 == 0)
 	{
 		l_fork = philo->right_fork;
 		r_fork = philo->left_fork;
 	}
 	else
 	{
+		// usleep(500);
 		l_fork = philo->left_fork;
 		r_fork = philo->right_fork;
 	}
@@ -51,8 +57,10 @@ void	*routine(void *args)
 	
 	philo = args;
 	data = philo->data;
-	if (philo->id % 2 == 1)
+	if (philo->id % 2 == 0)
 		usleep(1500);
+	else
+		usleep(300);
 	pthread_mutex_lock(&data->time_lock);
 	philo->time_eaten = get_current_time();
 	pthread_mutex_unlock(&data->time_lock);
@@ -66,6 +74,7 @@ void	*routine(void *args)
 		philos_eat(philo);
 		philo_action(philo, "is sleeping");
 		ft_usleep(data->sle_ti, data);
+		usleep(50);
 		philo_action(philo, "is thinking");
 		// ft_usleep(data->sle_ti, data);
 	}
