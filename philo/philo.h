@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:47:32 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/14 18:08:55 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/05/14 21:10:36 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct	s_philo
 	int			right_fork;
 	int			meals_eaten;
 	long			time_eaten;
+	pthread_mutex_t	state_mutex;
 	// bool		death;
 	pthread_t	philos;
 	pthread_mutex_t	fork_lock;
@@ -48,12 +49,13 @@ typedef struct	s_data
 	long	long	time;
 	bool			death;
 	pthread_mutex_t	*fork;
-	pthread_mutex_t	sleep_lock;
-	pthread_mutex_t	think_lock;
+	pthread_mutex_t	state_mutex;
+	// pthread_mutex_t	sleep_lock;
+	// pthread_mutex_t	think_lock;
 	pthread_mutex_t	death_lock;
-	pthread_mutex_t	time_lock;
-	pthread_mutex_t	action_lock;
-	pthread_mutex_t	upd_lock;
+	// pthread_mutex_t	time_lock;
+	// pthread_mutex_t	action_lock;
+	// pthread_mutex_t	upd_lock;
 	pthread_mutex_t	msg_lock;
 }	t_data;
 
@@ -69,13 +71,15 @@ void	*routine(void *args);
 
 int 	ft_usleep(int ms, t_data *data);
 
-void	philo_action(t_philo *philo, char *message);
+int		philo_action(t_philo *philo, char *message);
 
 void	create_philos(t_data *data);
 int		philos_eat(t_philo *philo);
-void	philos_be_eatin(t_philo *philo);
+int		philos_be_eatin(t_philo *philo);
 void	*monitoring(void *arg);
 void	clean_up(t_data *data);
-void	philo_sleep(t_philo *philo, char *message);
+void	print_message(t_philo *philo, char *message, int i);
+int	ft_strncmp(const char *s1, const char *s2, size_t c);
+// void	philo_sleep(t_philo *philo, char *message);
 
 #endif
