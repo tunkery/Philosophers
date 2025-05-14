@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:53:07 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/14 13:07:50 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/05/14 13:53:06 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	*routine(void *args)
 	philo = args;
 	data = philo->data;
 	if (philo->id % 2 == 1)
-		usleep(1000);
+		usleep(1500);
 	pthread_mutex_lock(&data->time_lock);
 	philo->time_eaten = get_current_time();
 	pthread_mutex_unlock(&data->time_lock);
@@ -67,7 +67,7 @@ void	*routine(void *args)
 		philo_action(philo, "is sleeping");
 		ft_usleep(data->sle_ti, data);
 		philo_action(philo, "is thinking");
-		ft_usleep(data->sle_ti, data);
+		// ft_usleep(data->sle_ti, data);
 	}
 	return (NULL);
 }

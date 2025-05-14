@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:51:35 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/14 13:10:57 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/05/14 13:38:19 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,11 @@ void	*monitoring(void *arg)
 	t_philo *p;
 	t_data	*data;
 	int		i;
-	// bool	all_full;
 	int		full_count;
 
 	m = arg;
 	data = m->data;
 	i = 0;
-	// all_full = true;
 	full_count = 0;
 	while (!data->death)
 	{
@@ -60,37 +58,25 @@ void	*monitoring(void *arg)
 		while (i < data->philo_no)
 		{
 			p = &data->philo[i];
-			pthread_mutex_lock(&data->upd_lock);
-			if ((get_current_time() - p->time_eaten +1)> data->die_ti)
+			pthread_mutex_lock(&data->death_lock);
+			if ((get_current_time() - p->time_eaten)> data->die_ti)
 			{
 				data->death = true;
 				print_message(p, "died", i);
-				pthread_mutex_unlock(&data->upd_lock);
+				pthread_mutex_unlock(&data->death_lock);
 				return (NULL);
 			}
 			if (data->eat_no > 0 && p->meals_eaten >= data->eat_no)
 				full_count++;
-			pthread_mutex_unlock(&data->upd_lock);
+			pthread_mutex_unlock(&data->death_lock);
 			i++;
 		}
-		// i = 0;
 		if (data->eat_no > 0 && full_count == data->philo_no)
 		{
-			pthread_mutex_lock(&data->upd_lock);
+			pthread_mutex_lock(&data->death_lock);
 			data->death = true;
-			pthread_mutex_unlock(&data->upd_lock);
+			pthread_mutex_unlock(&data->death_lock);
 			return (NULL);
-			// while (i < data->philo_no)
-			// {
-			// 	if (p->meals_eaten < data->eat_no)
-			// 		all_full = false;
-			// 	i++;
-			// }
-			// if (all_full)
-			// {
-			// 	data->death = true;
-			// 	return (NULL);
-			// }
 		}
 		usleep(1000);
 	}
