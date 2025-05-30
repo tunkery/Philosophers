@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:51:35 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/30 12:35:32 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/05/30 14:27:09 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	create_philos(t_data *data)
 			return ;
 		i++;
 	}
-	// pthread_create(&data->monitor, NULL, &monitoring, &data->philo[0]);
+	pthread_create(&data->monitor, NULL, &monitoring, &data->philo[0]);
 	i = 0;
 	while (i < data->philo_no)
 	{
@@ -47,7 +47,7 @@ void	create_philos(t_data *data)
 			return ;
 		i++;
 	}
-	// pthread_join(data->monitor, NULL);
+	pthread_join(data->monitor, NULL);
 }
 
 void	init_data(t_data *data, char **av)
@@ -80,6 +80,7 @@ void	init_data(t_data *data, char **av)
 		data->philo[i].data = data;
 		data->philo[i].meals_eaten = 0;
 		data->philo[i].time_eaten = data->start_time;
+		data->philo[i].start_time = data->start_time;
 		data->philo[i].id = i + 1;
 		data->philo[i].left_fork = i;
 		if (i == data->philo_no)

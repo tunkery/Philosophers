@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:53:07 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/30 14:20:12 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/05/30 15:36:48 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,10 @@ void	print_message(t_philo *philo, char *message)
 	data = philo->data;
 	time = get_current_time();
 	pthread_mutex_lock(&data->state_mutex);
+	pthread_mutex_lock(&data->msg_lock);
 	printf("%ld %s %s\n", time - data->start_time, "a philo", message);
 	pthread_mutex_unlock(&data->state_mutex);
+	pthread_mutex_unlock(&data->msg_lock);
 }
 
 void	*monitoring(void *args)
@@ -29,9 +31,12 @@ void	*monitoring(void *args)
 	t_philo	*philo;
 	t_data	*data;
 	bool	check;
+	long	time;
+	int		i;
 
 	philo = args;
 	data = philo->data;
+	i = 0;
 	while (1)
 	{
 		pthread_mutex_lock(&data->death_lock);
@@ -42,6 +47,23 @@ void	*monitoring(void *args)
 			print_message(philo, "died");
 			return (NULL);
 		}
+		time = get_current_time();
+		pthread_mutex_lock(&data->state_mutex);
+		while (i < data->philo_no)
+		{
+			if (time - data->philo[i].time_eaten > data->die_ti)
+			{
+				pthread_mutex_lock(&data->death_lock);
+				data->death = true;
+				pthread_mutex_unlock(&data->death_lock);
+				print_message(philo, "died");
+				pthread_mutex_unlock(&data->state_mutex);
+				return (NULL);
+			}
+			i++;
+		}
+		i = 0;
+		pthread_mutex_unlock(&data->state_mutex);
 		usleep(1000);
 	}
 	return (NULL);
@@ -54,9 +76,11 @@ void	*routine(void *args)
 
 	philo = args;
 	data = philo->data;
+	if (philo->id % 2 == 0)
+		usleep(1000);
 	while (1)
 	{
-		if (data->eat_no != 0)
+		if (data->eat_no > 0)
 		{
 			pthread_mutex_lock(&data->state_mutex);
 			if (philo->meals_eaten == data->eat_no)
@@ -68,11 +92,14 @@ void	*routine(void *args)
 		}
 		if (beginning_of_eat(philo) == -1)
 			break ;
+		// pthread_mutex_lock(&philo->state_mutex);
+		// printf("%ld %d %s\n", get_current_time() - philo->start_time, philo->id, "left the forks");
+		// pthread_mutex_unlock(&philo->state_mutex);
 		// forklari aldi, yemeye basladi
 		if (sleepin(philo, "is sleeping") == -1)
 			break ;
-		if (thinking(philo, "is thinking") == -1)
-			break ;
+		// if (thinking(philo, "is thinking") == -1)
+		// 	break ;
 	}
 	return (NULL);
 }

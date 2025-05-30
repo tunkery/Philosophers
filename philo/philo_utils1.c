@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:11:15 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/30 14:03:53 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/05/30 15:05:43 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,11 @@ int	thinking(t_philo *philo, char *message)
 			pthread_mutex_unlock(&data->state_mutex);
             return (-1);
         }
+		pthread_mutex_lock(&data->msg_lock);
         printf("%ld %d %s\n",time - data->start_time, philo->id, message);
+		pthread_mutex_unlock(&data->msg_lock);
         pthread_mutex_unlock(&data->state_mutex);
-		ft_usleep(100, data);
+		ft_usleep(200, data);
     }
     return (0);
 }
@@ -65,7 +67,9 @@ int	sleepin(t_philo *philo, char *message)
 			pthread_mutex_unlock(&data->state_mutex);
             return (-1);
         }
+		pthread_mutex_lock(&data->msg_lock);
         printf("%ld %d %s\n",time - data->start_time, philo->id, message);
+		pthread_mutex_unlock(&data->msg_lock);
         pthread_mutex_unlock(&data->state_mutex);
 		ft_usleep(data->sle_ti, data);
     }
@@ -116,8 +120,9 @@ int	philo_action(t_philo *philo, char *message)
 			pthread_mutex_unlock(&data->state_mutex);
             return (-1);
         }
-        else
-            printf("%ld %d %s\n",time - data->start_time, philo->id, message);
+		pthread_mutex_lock(&data->msg_lock);
+        printf("%ld %d %s\n",time - data->start_time, philo->id, message);
+		pthread_mutex_unlock(&data->msg_lock);
         pthread_mutex_unlock(&data->state_mutex);
     }
     return (0);
@@ -146,7 +151,9 @@ int	eat(t_philo *philo, char *message)
 			pthread_mutex_unlock(&data->state_mutex);
             return (-1);
         }
+		pthread_mutex_lock(&data->msg_lock);
         printf("%ld %d %s\n",time - data->start_time, philo->id, message);
+		pthread_mutex_unlock(&data->msg_lock);
 		philo->time_eaten = time;
 		philo->meals_eaten++;
         pthread_mutex_unlock(&data->state_mutex);

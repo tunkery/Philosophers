@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:47:32 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/30 14:19:18 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/05/30 14:25:55 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct	s_philo
 	int			right_fork;
 	int			meals_eaten;
 	long			time_eaten;
+	long		start_time;
 	pthread_mutex_t	state_mutex;
 	pthread_t	philos;
 	pthread_mutex_t	fork_lock;
