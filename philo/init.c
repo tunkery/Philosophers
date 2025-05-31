@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:51:35 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/30 14:27:09 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/05/31 14:07:54 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,11 +82,11 @@ void	init_data(t_data *data, char **av)
 		data->philo[i].time_eaten = data->start_time;
 		data->philo[i].start_time = data->start_time;
 		data->philo[i].id = i + 1;
-		data->philo[i].left_fork = i;
+		data->philo[i].left_fork = i + 1;
 		if (i == data->philo_no)
 			data->philo[i].right_fork = 0;
 		else
-			data->philo[i].right_fork = i + 1;
+			data->philo[i].right_fork = i + 2;
 		// if (i + 1 < data->philo_no)
 		// 	data->philo[i].right_fork = i + 1;
 		// else

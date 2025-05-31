@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:47:32 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/30 14:25:55 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/05/31 14:27:35 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int		sleepin(t_philo *philo, char *message);
 int		unlock_and_return(t_philo *philo);
 void	*monitoring(void *args);
 void	clean_up(t_data *data);
-void	print_message(t_philo *philo, char *message);
+void	print_message(t_philo *philo, char *message, int i);
 int	ft_strncmp(const char *s1, const char *s2, size_t c);
 // void	philo_sleep(t_philo *philo, char *message);
 
