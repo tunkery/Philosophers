@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:53:07 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/04 14:13:25 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/04 14:44:58 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,25 +36,26 @@ void	*monitoring(void *args)
 	i = 0;
 	while (1)
 	{
-		pthread_mutex_lock(&data->state_mutex);
+		// pthread_mutex_lock(&data->state_mutex);
 		while (i < data->philo_no)
 		{
-			// pthread_mutex_lock(&data->state_mutex);
+			pthread_mutex_lock(&data->state_mutex);
 			if (get_current_time() - data->philo[i].time_eaten > data->die_ti)
 			{
 				pthread_mutex_lock(&data->death_lock);
 				data->death = true;
+				check = data->death;
 				pthread_mutex_unlock(&data->death_lock);
 				pthread_mutex_unlock(&data->state_mutex);
 				break ;
 			}
-			// pthread_mutex_unlock(&data->state_mutex);
+			pthread_mutex_unlock(&data->state_mutex);
 			i++;
 		}
-		pthread_mutex_unlock(&data->state_mutex);
-		pthread_mutex_lock(&data->death_lock);
-		check = data->death;
-		pthread_mutex_unlock(&data->death_lock);
+		// pthread_mutex_unlock(&data->state_mutex);
+		// pthread_mutex_lock(&data->death_lock);
+		// check = data->death;
+		// pthread_mutex_unlock(&data->death_lock);
 		if (check)
 		{
 			print_message(philo, "died", i);
@@ -127,18 +128,27 @@ int	philos_be_eatin(t_philo *philo)
 	pthread_mutex_lock(&data->fork[left]);
 	if (philo_action(philo, "has taken a fork") == -1)
 	{
+		// pthread_mutex_lock(&data->death_lock);
+		// data->death = true;
+		// pthread_mutex_unlock(&data->death_lock);
 		pthread_mutex_unlock(&data->fork[left]);
 		return (-1);
 	}
 	pthread_mutex_lock(&data->fork[right]);
 	if (philo_action(philo, "has taken a fork") == -1)
 	{
+		// pthread_mutex_lock(&data->death_lock);
+		// data->death = true;
+		// pthread_mutex_unlock(&data->death_lock);
 		pthread_mutex_unlock(&data->fork[left]);
 		pthread_mutex_unlock(&data->fork[right]);
 		return (-1);
 	}
 	if (eat(philo, "is eating") == -1)
 	{
+		// pthread_mutex_lock(&data->death_lock);
+		// data->death = true;
+		// pthread_mutex_unlock(&data->death_lock);
 		pthread_mutex_unlock(&data->fork[left]);
 		pthread_mutex_unlock(&data->fork[right]);
 		return (-1);
