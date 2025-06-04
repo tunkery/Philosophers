@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:11:15 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/31 14:23:45 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/04 14:11:53 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,9 @@ int	sleepin(t_philo *philo, char *message)
         printf("%ld %d %s\n",time - data->start_time, philo->id, message);
 		pthread_mutex_unlock(&data->msg_lock);
 		ft_usleep(data->sle_ti, data);
+		return (0);
     }
-    return (0);
+    return (-1);
 }
 
 int ft_usleep(int ms, t_data *data)
@@ -124,8 +125,9 @@ int	philo_action(t_philo *philo, char *message)
         pthread_mutex_lock(&data->msg_lock);
         printf("%ld %d %s\n",time - data->start_time, philo->id, message);
 		pthread_mutex_unlock(&data->msg_lock);
+		return (0);
     }
-    return (0);
+    return (-1);
 }
 
 int	eat(t_philo *philo, char *message)
@@ -154,15 +156,21 @@ int	eat(t_philo *philo, char *message)
 		// philo->time_eaten = time;
 		// philo->meals_eaten++;
         // pthread_mutex_unlock(&data->state_mutex);
-        pthread_mutex_lock(&data->msg_lock);
+        // pthread_mutex_lock(&data->msg_lock);
+        // printf("%ld %d %s\n",time - data->start_time, philo->id, message);
+		// pthread_mutex_unlock(&data->msg_lock);
+		// ft_usleep(data->eat_ti, data);
+        philo->meals_eaten++;
+        philo->time_eaten = time;
+		pthread_mutex_unlock(&data->state_mutex);
+		pthread_mutex_lock(&data->msg_lock);
         printf("%ld %d %s\n",time - data->start_time, philo->id, message);
 		pthread_mutex_unlock(&data->msg_lock);
 		ft_usleep(data->eat_ti, data);
-        philo->meals_eaten++;
-        philo->time_eaten = time;
-        pthread_mutex_unlock(&data->state_mutex);
+        // pthread_mutex_unlock(&data->state_mutex);
+		return (0);
     }
-	return (0);
+	return (-1);
 }
 
 int	unlock_and_return(t_philo *philo)

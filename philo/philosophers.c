@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:53:07 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/31 14:57:53 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/04 14:13:25 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void	*monitoring(void *args)
 	t_philo	*philo;
 	t_data	*data;
 	bool	check;
-	long	time;
 	int		i;
 
 	philo = args;
@@ -37,10 +36,10 @@ void	*monitoring(void *args)
 	i = 0;
 	while (1)
 	{
-		time = get_current_time();
 		pthread_mutex_lock(&data->state_mutex);
 		while (i < data->philo_no)
 		{
+			// pthread_mutex_lock(&data->state_mutex);
 			if (get_current_time() - data->philo[i].time_eaten > data->die_ti)
 			{
 				pthread_mutex_lock(&data->death_lock);
@@ -49,6 +48,7 @@ void	*monitoring(void *args)
 				pthread_mutex_unlock(&data->state_mutex);
 				break ;
 			}
+			// pthread_mutex_unlock(&data->state_mutex);
 			i++;
 		}
 		pthread_mutex_unlock(&data->state_mutex);
@@ -73,7 +73,7 @@ void	*routine(void *args)
 
 	philo = args;
 	data = philo->data;
-	if (philo->id % 2 == 0)
+	if (philo->id % 2)
 		usleep(1000);
 	while (1)
 	{
@@ -108,21 +108,21 @@ int	philos_be_eatin(t_philo *philo)
 	int		right;
 
 	data = philo->data;
-	if (philo->right_fork == 0)
+	// if (philo->right_fork == 0)
+	// {
+	// 	left = philo->right_fork;
+	// 	right = philo->left_fork;
+	// }
+	if (philo->id % 2)
 	{
-		left = philo->right_fork;
-		right = philo->left_fork;
-	}
-	else if (philo->id % 2)
-	{
-		left = philo->right_fork;
-		right = philo->left_fork;
+		right = philo->right_fork;
+		left = philo->left_fork;
 	}
 	else
 	{
 		// usleep(500);
-		right = philo->right_fork;
-		left = philo->left_fork;
+		left = philo->right_fork;
+		right = philo->left_fork;
 	}
 	pthread_mutex_lock(&data->fork[left]);
 	if (philo_action(philo, "has taken a fork") == -1)
