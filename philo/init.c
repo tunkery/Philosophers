@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:51:35 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/04 14:29:21 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/04 15:11:49 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,17 @@ void	create_philos(t_data *data)
 	pthread_join(data->monitor, NULL);
 }
 
-void	init_data(t_data *data, char **av)
+int	init_data(t_data *data, char **av)
 {
 	int	i;
 
 	i = 0;
 	data->philo_no = ft_atoi(av[1]);
+	if (data->philo_no <= 0)
+	{
+		printf("The philo number has to be more than 0\n");
+		return (-1);
+	}
 	data->die_ti = ft_atoi(av[2]);
 	data->eat_ti = ft_atoi(av[3]);
 	data->sle_ti = ft_atoi(av[4]);
@@ -69,10 +74,10 @@ void	init_data(t_data *data, char **av)
 	data->start_time = get_current_time();
 	data->philo = malloc(sizeof(t_philo) * data->philo_no);
 	if (!data->philo)
-		return ;
+		return (0);
 	data->fork = malloc(sizeof(pthread_mutex_t) * data->philo_no);
 	if (!data->fork)
-		return ;
+		return (0);
 	while (i < data->philo_no)
 	{
 		pthread_mutex_init(&data->fork[i], NULL);
@@ -93,4 +98,5 @@ void	init_data(t_data *data, char **av)
 		// 	data->philo[i].right_fork = 0;
 		i++;
 	}
+	return (0);
 }

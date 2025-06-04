@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:53:07 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/04 14:44:58 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/04 15:14:25 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,14 +116,14 @@ int	philos_be_eatin(t_philo *philo)
 	// }
 	if (philo->id % 2)
 	{
-		right = philo->right_fork;
-		left = philo->left_fork;
+		left = philo->right_fork;
+		right = philo->left_fork;
 	}
 	else
 	{
 		// usleep(500);
-		left = philo->right_fork;
-		right = philo->left_fork;
+		right = philo->right_fork;
+		left = philo->left_fork;
 	}
 	pthread_mutex_lock(&data->fork[left]);
 	if (philo_action(philo, "has taken a fork") == -1)
@@ -192,7 +192,8 @@ int	main(int ac, char **av)
 	if (!data)
 		return (0);
 	// argument order: number_of_philosophers | time_to_die | time_to_eat | time_to_sleep
-	init_data(data, av);
+	if (init_data(data, av) == -1)
+		return (0);
 	create_philos(data);
 	clean_up(data);
 	return (0);
