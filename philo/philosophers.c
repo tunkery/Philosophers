@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:53:07 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/04 15:14:25 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/06 14:01:04 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	*monitoring(void *args)
 {
 	t_philo	*philo;
 	t_data	*data;
-	bool	check;
 	int		i;
 
 	philo = args;
@@ -36,7 +35,6 @@ void	*monitoring(void *args)
 	i = 0;
 	while (1)
 	{
-		// pthread_mutex_lock(&data->state_mutex);
 		while (i < data->philo_no)
 		{
 			pthread_mutex_lock(&data->state_mutex);
@@ -44,23 +42,19 @@ void	*monitoring(void *args)
 			{
 				pthread_mutex_lock(&data->death_lock);
 				data->death = true;
-				check = data->death;
 				pthread_mutex_unlock(&data->death_lock);
+				print_message(philo, "died", i);
 				pthread_mutex_unlock(&data->state_mutex);
-				break ;
+				return (NULL);
 			}
 			pthread_mutex_unlock(&data->state_mutex);
 			i++;
 		}
-		// pthread_mutex_unlock(&data->state_mutex);
-		// pthread_mutex_lock(&data->death_lock);
-		// check = data->death;
-		// pthread_mutex_unlock(&data->death_lock);
-		if (check)
-		{
-			print_message(philo, "died", i);
-			return (NULL);
-		}
+		// if (check)
+		// {
+		// 	print_message(philo, "died", i);
+		// 	return (NULL);
+		// }
 		i = 0;
 		usleep(1000);
 	}
@@ -90,9 +84,6 @@ void	*routine(void *args)
 		}
 		if (beginning_of_eat(philo) == -1)
 			break ;
-		// pthread_mutex_lock(&philo->state_mutex);
-		// printf("%ld %d %s\n", get_current_time() - philo->start_time, philo->id, "left the forks");
-		// pthread_mutex_unlock(&philo->state_mutex);
 		// forklari aldi, yemeye basladi
 		if (sleepin(philo, "is sleeping") == -1)
 			break ;
@@ -126,33 +117,10 @@ int	philos_be_eatin(t_philo *philo)
 		left = philo->left_fork;
 	}
 	pthread_mutex_lock(&data->fork[left]);
-	if (philo_action(philo, "has taken a fork") == -1)
-	{
-		// pthread_mutex_lock(&data->death_lock);
-		// data->death = true;
-		// pthread_mutex_unlock(&data->death_lock);
-		pthread_mutex_unlock(&data->fork[left]);
-		return (-1);
-	}
+	philo_action(philo, "has taken a fork");
 	pthread_mutex_lock(&data->fork[right]);
-	if (philo_action(philo, "has taken a fork") == -1)
-	{
-		// pthread_mutex_lock(&data->death_lock);
-		// data->death = true;
-		// pthread_mutex_unlock(&data->death_lock);
-		pthread_mutex_unlock(&data->fork[left]);
-		pthread_mutex_unlock(&data->fork[right]);
-		return (-1);
-	}
-	if (eat(philo, "is eating") == -1)
-	{
-		// pthread_mutex_lock(&data->death_lock);
-		// data->death = true;
-		// pthread_mutex_unlock(&data->death_lock);
-		pthread_mutex_unlock(&data->fork[left]);
-		pthread_mutex_unlock(&data->fork[right]);
-		return (-1);
-	}
+	philo_action(philo, "has taken a fork");
+	eat(philo, "is eating");
 	pthread_mutex_unlock(&data->fork[left]);
 	pthread_mutex_unlock(&data->fork[right]);
 	return (0);

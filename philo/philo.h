@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:47:32 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/04 15:07:30 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/06 13:23:44 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct	s_data
 {
 	t_philo			*philo;
 	pthread_t		monitor;
+	int				thi_ti;
 	int				eat_ti;
 	int				die_ti;
 	int				sle_ti;
