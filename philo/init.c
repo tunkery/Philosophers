@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:51:35 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/06 13:26:15 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/06 14:05:01 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	init_data(t_data *data, char **av)
 	if (av[5])
 		data->eat_no = ft_atoi(av[5]);
 	if (data->die_ti > (data->eat_ti + data->sle_ti))
-		data->thi_ti = data->die_ti - (data->eat_ti + data->sle_ti) / 2;
+		data->thi_ti = data->die_ti - (data->eat_ti + data->sle_ti) / 4;
 	else
 		data->thi_ti = 1;
 	data->death = false;

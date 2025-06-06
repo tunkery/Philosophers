@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:53:07 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/06 14:01:04 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/06 14:15:30 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@ void	print_message(t_philo *philo, char *message, int i)
 	long	time;
 
 	data = philo->data;
+	pthread_mutex_lock(&data->death_lock);
+	data->death = true;
+	pthread_mutex_unlock(&data->death_lock);
 	time = get_current_time();
 	pthread_mutex_lock(&data->msg_lock);
 	printf("%ld %d %s\n", time - data->start_time, i + 1, message);
@@ -38,11 +41,8 @@ void	*monitoring(void *args)
 		while (i < data->philo_no)
 		{
 			pthread_mutex_lock(&data->state_mutex);
-			if (get_current_time() - data->philo[i].time_eaten > data->die_ti)
+			if (get_current_time() - data->philo[i].time_eaten >= data->die_ti)
 			{
-				pthread_mutex_lock(&data->death_lock);
-				data->death = true;
-				pthread_mutex_unlock(&data->death_lock);
 				print_message(philo, "died", i);
 				pthread_mutex_unlock(&data->state_mutex);
 				return (NULL);
@@ -50,11 +50,6 @@ void	*monitoring(void *args)
 			pthread_mutex_unlock(&data->state_mutex);
 			i++;
 		}
-		// if (check)
-		// {
-		// 	print_message(philo, "died", i);
-		// 	return (NULL);
-		// }
 		i = 0;
 		usleep(1000);
 	}
@@ -84,7 +79,6 @@ void	*routine(void *args)
 		}
 		if (beginning_of_eat(philo) == -1)
 			break ;
-		// forklari aldi, yemeye basladi
 		if (sleepin(philo, "is sleeping") == -1)
 			break ;
 		// if (thinking(philo, "is thinking") == -1)
@@ -100,11 +94,6 @@ int	philos_be_eatin(t_philo *philo)
 	int		right;
 
 	data = philo->data;
-	// if (philo->right_fork == 0)
-	// {
-	// 	left = philo->right_fork;
-	// 	right = philo->left_fork;
-	// }
 	if (philo->id % 2)
 	{
 		left = philo->right_fork;
@@ -112,7 +101,6 @@ int	philos_be_eatin(t_philo *philo)
 	}
 	else
 	{
-		// usleep(500);
 		right = philo->right_fork;
 		left = philo->left_fork;
 	}
