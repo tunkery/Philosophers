@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:47:32 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/06 13:23:44 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/06 15:42:15 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,21 +21,19 @@
 # include <string.h>
 # include <stdbool.h>
 
-typedef struct	s_philo
+typedef struct s_philo
 {
-	int			id;
-	int			left_fork;
-	int			right_fork;
-	int			meals_eaten;
+	int				id;
+	int				left_fork;
+	int				right_fork;
+	int				meals_eaten;
 	long			time_eaten;
-	long		start_time;
-	pthread_mutex_t	state_mutex;
-	pthread_t	philos;
-	pthread_mutex_t	fork_lock;
+	long			start_time;
+	pthread_t		philos;
 	struct s_data	*data;
 }	t_philo;
 
-typedef struct	s_data
+typedef struct s_data
 {
 	t_philo			*philo;
 	pthread_t		monitor;
@@ -46,8 +44,6 @@ typedef struct	s_data
 	int				philo_no;
 	int				eat_no;
 	long			start_time;
-	struct timeval	start;
-	long	long	time;
 	bool			death;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	state_mutex;
@@ -55,32 +51,36 @@ typedef struct	s_data
 	pthread_mutex_t	msg_lock;
 }	t_data;
 
-int		ft_atoi(const char *str);
-long	get_current_time(void);
-void	get_time(t_data *data);
-int		ft_strlen(const char *str);
+// Helper functions
 
-int		init_data(t_data *data, char **av);
+int		ft_atoi(const char *str);
+int		ft_strncmp(const char *s1, const char *s2, size_t c);
+int		ft_strlen(const char *str);
+int		ft_usleep(int ms, t_data *data);
 int		check_args(char **av);
+long	get_current_time(void);
+void	print_message(t_philo *philo, char *message, int i);
+bool	death_check(t_philo *philo);
+void	print_for_eat(t_philo *philo, char *message, long time);
+
+// Initialize everything
+
+int		init_data(t_data *data);
+int		init_arguments(t_data *data, char **av);
+void	create_philos(t_data *data);
+
+// Philo actions
 
 void	*routine(void *args);
-
-int 	ft_usleep(int ms, t_data *data);
-
-int		philo_action(t_philo *philo, char *message);
-
-void	create_philos(t_data *data);
-int		philos_eat(t_philo *philo);
+void	*monitoring(void *args);
 int		beginning_of_eat(t_philo *philo);
 int		philos_be_eatin(t_philo *philo);
+int		philo_action(t_philo *philo, char *message);
 int		eat(t_philo *philo, char *message);
 int		thinking(t_philo *philo, char *message);
 int		sleepin(t_philo *philo, char *message);
-int		unlock_and_return(t_philo *philo);
-void	*monitoring(void *args);
+
+// Clean-up
 void	clean_up(t_data *data);
-void	print_message(t_philo *philo, char *message, int i);
-int	ft_strncmp(const char *s1, const char *s2, size_t c);
-// void	philo_sleep(t_philo *philo, char *message);
 
 #endif

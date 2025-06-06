@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: batuhan <batuhan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 20:03:30 by bolcay            #+#    #+#             */
-/*   Updated: 2025/05/13 19:58:00 by batuhan          ###   ########.fr       */
+/*   Updated: 2025/06/06 15:32:37 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,18 +48,10 @@ int	ft_atoi(const char *str)
 	return (result * check);
 }
 
-void	get_time(t_data *data)
-{
-	struct timeval	time;
-
-	gettimeofday(&time, NULL);
-	data->start = time;
-}
-
 long	get_current_time(void)
 {
 	struct timeval	time;
-	
+
 	gettimeofday(&time, NULL);
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
@@ -73,7 +65,8 @@ static int	ft_isalpha(char *str)
 		return (-1);
 	while (str[i])
 	{
-		if (!(str[i] >= 97 && str[i] <= 122) && !(str[i] >= 65 && str[i] <= 90))
+		if (((str[i] >= 97 && str[i] <= 122) || (str[i] >= 65 && str[i] <= 90))
+			&& str[i] != '-' && str[i] != '+')
 			return (-1);
 		i++;
 	}
@@ -82,16 +75,27 @@ static int	ft_isalpha(char *str)
 
 int	check_args(char **av)
 {
-	if (ft_atoi(av[1]) < 0 || ft_atoi(av[2]) < 0 || ft_atoi(av[3]) < 0 || ft_atoi(av[4]) < 0)
+	if (ft_isalpha(av[1]) == -1 || ft_isalpha(av[2]) == -1
+		|| ft_isalpha(av[3]) == -1 || ft_isalpha(av[4]) == -1)
+	{
+		printf("Arguments must be given as numeric values\n");
 		return (-1);
-	if (ft_isalpha(av[1]) == -1 || ft_isalpha(av[2]) == -1 || ft_isalpha(av[3]) == -1 || ft_isalpha(av[4]) == -1)
+	}
+	if (ft_atoi(av[1]) <= 0 || ft_atoi(av[2]) <= 0
+		|| ft_atoi(av[3]) <= 0 || ft_atoi(av[4]) <= 0)
+	{
+		printf("Argument values must be more than 0\n");
 		return (-1);
+	}
 	if (av[5])
 	{
-		if (ft_atoi(av[5]) < 0)
-			return (-1);
+		if (ft_atoi(av[5]) <= 0)
+			return (-2);
 		if (ft_isalpha(av[5]) == -1)
+		{
+			printf("Arguments must be given as numeric values\n");
 			return (-1);
+		}
 	}
 	return (0);
 }

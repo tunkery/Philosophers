@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:51:35 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/06 14:05:01 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/06 14:51:56 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ void	create_philos(t_data *data)
 	i = 0;
 	while (i < data->philo_no)
 	{
-		if (pthread_create(&data->philo[i].philos, NULL, &routine, &data->philo[i]) != 0)
+		if (pthread_create(&data->philo[i].philos, NULL, &routine,
+				&data->philo[i]) != 0)
 			return ;
 		i++;
 	}
@@ -50,11 +51,8 @@ void	create_philos(t_data *data)
 	pthread_join(data->monitor, NULL);
 }
 
-int	init_data(t_data *data, char **av)
+int	init_arguments(t_data *data, char **av)
 {
-	int	i;
-
-	i = 0;
 	data->philo_no = ft_atoi(av[1]);
 	if (data->philo_no <= 0)
 	{
@@ -68,10 +66,9 @@ int	init_data(t_data *data, char **av)
 	if (av[5])
 		data->eat_no = ft_atoi(av[5]);
 	if (data->die_ti > (data->eat_ti + data->sle_ti))
-		data->thi_ti = data->die_ti - (data->eat_ti + data->sle_ti) / 4;
+		data->thi_ti = data->die_ti - (data->eat_ti + data->sle_ti) / 2;
 	else
 		data->thi_ti = 1;
-	data->death = false;
 	pthread_mutex_init(&data->death_lock, NULL);
 	pthread_mutex_init(&data->msg_lock, NULL);
 	pthread_mutex_init(&data->state_mutex, NULL);
@@ -79,13 +76,22 @@ int	init_data(t_data *data, char **av)
 	data->philo = malloc(sizeof(t_philo) * data->philo_no);
 	if (!data->philo)
 		return (0);
+	init_data(data);
+	return (0);
+}
+
+int	init_data(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	data->death = false;
 	data->fork = malloc(sizeof(pthread_mutex_t) * data->philo_no);
 	if (!data->fork)
 		return (0);
 	while (i < data->philo_no)
 	{
 		pthread_mutex_init(&data->fork[i], NULL);
-		pthread_mutex_init(&data->philo[i].state_mutex, NULL);
 		data->philo[i].data = data;
 		data->philo[i].meals_eaten = 0;
 		data->philo[i].time_eaten = data->start_time;
@@ -96,10 +102,6 @@ int	init_data(t_data *data, char **av)
 			data->philo[i].right_fork = 0;
 		else
 			data->philo[i].right_fork = i + 2;
-		// if (i + 1 < data->philo_no)
-		// 	data->philo[i].right_fork = i + 1;
-		// else
-		// 	data->philo[i].right_fork = 0;
 		i++;
 	}
 	return (0);
