@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:47:32 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/20 06:37:04 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/20 13:27:44 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct s_philo
 	int				meals_eaten;
 	long			time_eaten;
 	long			start_time;
+	bool			full;
 	pthread_t		philos;
 	struct s_data	*data;
 }	t_philo;
@@ -56,7 +57,7 @@ typedef struct s_data
 int		ft_atoi(const char *str);
 int		ft_strncmp(const char *s1, const char *s2, size_t c);
 int		ft_strlen(const char *str);
-int		ft_usleep(int ms, t_data *data);
+int		ft_usleep(long ms, t_data *data);
 int		check_args(char **av);
 long	get_current_time(void);
 void	print_message(t_philo *philo, char *message, int i);

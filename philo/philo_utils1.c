@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:11:15 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/20 09:08:34 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/20 13:29:04 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,12 +70,12 @@ int	thinking(t_philo *philo, char *message)
 	}
 	printf("%ld %d %s\n", time - data->start_time, philo->id, message);
 	pthread_mutex_unlock(&data->msg_lock);
-	// ft_usleep(data->die_ti - (data->eat_ti + data->sle_ti), data);
-	// usleep(1000);
+	ft_usleep(data->die_ti - (data->eat_ti + data->sle_ti) * 1000, data);
+	// usleep(data->die_ti - (data->eat_ti + data->sle_ti) * 1000);
 	return (0);
 }
 
-int	ft_usleep(int ms, t_data *data)
+int	ft_usleep(long ms, t_data *data)
 {
 	long	c_time;
 

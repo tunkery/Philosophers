@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:51:35 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/20 11:00:13 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/20 13:08:16 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,10 +98,8 @@ int	init_data(t_data *data)
 		data->philo[i].start_time = data->start_time;
 		data->philo[i].id = i + 1;
 		data->philo[i].left_fork = i;
-		// if (i == data->philo_no)
-		// 	data->philo[i].right_fork = 0;
-		// else
 		data->philo[i].right_fork = (i + 1) % data->philo_no;
+		data->philo[i].full = false;
 		i++;
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 15:08:11 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/20 11:01:56 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/20 13:09:25 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,6 @@ int	philos_be_eatin(t_philo *philo)
 	int		right;
 
 	data = philo->data;
-	// if (philo->id == data->philo_no)
-	// {
-	// 	left = philo->left_fork;
-	// 	right = philo->right_fork;
-	// }
 	if (philo->id % 2)
 	{
 		left = philo->right_fork;
@@ -39,24 +34,6 @@ int	philos_be_eatin(t_philo *philo)
 	pthread_mutex_lock(&data->fork[right]);
 	philo_action(philo, "has taken a fork");
 	eat(philo, "is eating");
-	// if (philo_action(philo, "has taken a fork") == -1)
-	// {
-	// 	pthread_mutex_unlock(&data->fork[left]);
-	// 	return (-1);
-	// }
-	// pthread_mutex_lock(&data->fork[right]);
-	// if (philo_action(philo, "has taken a fork") == -1)
-	// {
-	// 	pthread_mutex_unlock(&data->fork[left]);
-	// 	pthread_mutex_unlock(&data->fork[right]);
-	// 	return (-1);
-	// }
-	// if (eat(philo, "is eating") == -1)
-	// {
-	// 	pthread_mutex_unlock(&data->fork[left]);
-	// 	pthread_mutex_unlock(&data->fork[right]);
-	// 	return (-1);
-	// }
 	pthread_mutex_unlock(&data->fork[left]);
 	pthread_mutex_unlock(&data->fork[right]);
 	return (0);
@@ -69,7 +46,17 @@ int	beginning_of_eat(t_philo *philo)
 	int		fork_index;
 
 	data = philo->data;
-	// id = philo->id;
+	if (data->eat_no > 0)
+	{
+		pthread_mutex_lock(&data->state_mutex);
+		if (philo->meals_eaten == data->eat_no)
+		{
+			philo->full = true;
+			pthread_mutex_unlock(&data->state_mutex);
+			return (-1);
+		}
+		pthread_mutex_unlock(&data->state_mutex);
+	}
 	fork_index = philo->left_fork;
 	if (data->philo_no == 1)
 	{
@@ -99,11 +86,6 @@ int	philo_action(t_philo *philo, char *message)
 		return (-1);
 	}
 	pthread_mutex_unlock(&data->state_mutex);
-	// pthread_mutex_lock(&data->death_lock);
-	// check = data->death;
-	// pthread_mutex_unlock(&data->death_lock);
-	// if (check)
-	// 	return (-1);
 	pthread_mutex_lock(&data->msg_lock);
 	pthread_mutex_lock(&data->death_lock);
 	check = data->death;
@@ -133,11 +115,6 @@ int	sleepin(t_philo *philo, char *message)
 		return (-1);
 	}
 	pthread_mutex_unlock(&data->state_mutex);
-	// pthread_mutex_lock(&data->death_lock);
-	// check = data->death;
-	// pthread_mutex_unlock(&data->death_lock);
-	// if (check)
-	// 	return (-1);
 	pthread_mutex_lock(&data->msg_lock);
 	pthread_mutex_lock(&data->death_lock);
 	check = data->death;
