@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:11:15 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/20 08:41:05 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/20 09:08:34 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,6 @@ int	thinking(t_philo *philo, char *message)
 		return (-1);
 	}
 	pthread_mutex_unlock(&data->state_mutex);
-	// pthread_mutex_lock(&data->death_lock);
-	// check = data->death;
-	// pthread_mutex_unlock(&data->death_lock);
-	// if (check)
-	// 	return (-1);
 	pthread_mutex_lock(&data->msg_lock);
 	pthread_mutex_lock(&data->death_lock);
 	check = data->death;
@@ -76,7 +71,7 @@ int	thinking(t_philo *philo, char *message)
 	printf("%ld %d %s\n", time - data->start_time, philo->id, message);
 	pthread_mutex_unlock(&data->msg_lock);
 	// ft_usleep(data->die_ti - (data->eat_ti + data->sle_ti), data);
-	// usleep(data->die_ti - (data->eat_ti + data->sle_ti) / 2);
+	// usleep(1000);
 	return (0);
 }
 
@@ -116,11 +111,6 @@ int	eat(t_philo *philo, char *message)
 	philo->meals_eaten++;
 	philo->time_eaten = time;
 	pthread_mutex_unlock(&data->state_mutex);
-	// pthread_mutex_lock(&data->death_lock);
-	// check = data->death;
-	// pthread_mutex_unlock(&data->death_lock);
-	// if (check)
-	// 	return (-1);
 	if (print_for_eat(philo, message, time) == -1)
 		return (-1);
 	if (ft_usleep(data->eat_ti, data) == -1)

@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:53:07 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/20 08:29:54 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/20 09:13:49 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,12 @@ void	*monitoring(void *args)
 			time = get_current_time();
 			if (time - data->philo[i].time_eaten >= data->die_ti)
 			{
+				if (data->eat_no > 0)
+				{
+					if (data->philo[i].meals_eaten == data->eat_no)
+					pthread_mutex_unlock(&data->state_mutex);
+					return (NULL);
+				}
 				print_message(philo, "died", i);
 				pthread_mutex_unlock(&data->state_mutex);
 				return (NULL);
@@ -94,8 +100,11 @@ void	*routine(void *args)
 			break ;
 		if (sleepin(philo, "is sleeping") == -1)
 			break ;
-		thinking(philo, "is thinking");
-		// ft_usleep(500, data);
+		if (thinking(philo, "is thinking") == -1)
+			break ;
+		usleep(1000);
+		// if (ft_usleep(data->die_ti - (data->eat_ti + data->sle_ti), data) == -1)
+		// 	break ;
 	}
 	return (NULL);
 }
@@ -122,7 +131,10 @@ int	main(int ac, char **av)
 	if (!data)
 		return (0);
 	if (init_arguments(data, av) == -1)
+	{
+		clean_up(data);
 		return (0);
+	}
 	create_philos(data);
 	clean_up(data);
 	return (0);
