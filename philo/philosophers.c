@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:53:07 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/06 17:01:05 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/20 06:11:34 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,21 @@ void	*monitoring(void *args)
 	t_philo	*philo;
 	t_data	*data;
 	int		i;
+	// bool	check;
 
 	philo = args;
 	data = philo->data;
+	// pthread_mutex_lock(&data->death_lock);
+	// check = data->death;
+	// pthread_mutex_unlock(&data->death_lock);
 	i = 0;
 	while (1)
 	{
 		while (i < data->philo_no)
 		{
+			// pthread_mutex_lock(&data->death_lock);
+			// check = data->death;
+			// pthread_mutex_unlock(&data->death_lock);
 			pthread_mutex_lock(&data->state_mutex);
 			if (get_current_time() - data->philo[i].time_eaten >= data->die_ti)
 			{

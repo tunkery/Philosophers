@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 15:08:11 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/06 15:49:03 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/20 06:11:24 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,26 +66,23 @@ int	philo_action(t_philo *philo, char *message)
 	long	time;
 
 	data = philo->data;
-	time = 0;
+	pthread_mutex_lock(&data->state_mutex);
+	time = get_current_time();
+	if (time - philo->time_eaten >= data->die_ti)
+	{
+		pthread_mutex_unlock(&data->state_mutex);
+		return (-1);
+	}
+	pthread_mutex_unlock(&data->state_mutex);
 	pthread_mutex_lock(&data->death_lock);
 	check = data->death;
 	pthread_mutex_unlock(&data->death_lock);
-	if (!check)
-	{
-		pthread_mutex_lock(&data->state_mutex);
-		time = get_current_time();
-		if (time - philo->time_eaten >= data->die_ti)
-		{
-			pthread_mutex_unlock(&data->state_mutex);
-			return (-1);
-		}
-		pthread_mutex_unlock(&data->state_mutex);
-		pthread_mutex_lock(&data->msg_lock);
-		printf("%ld %d %s\n", time - data->start_time, philo->id, message);
-		pthread_mutex_unlock(&data->msg_lock);
-		return (0);
-	}
-	return (-1);
+	if (check)
+		return (-1);
+	pthread_mutex_lock(&data->msg_lock);
+	printf("%ld %d %s\n", time - data->start_time, philo->id, message);
+	pthread_mutex_unlock(&data->msg_lock);
+	return (0);
 }
 
 int	sleepin(t_philo *philo, char *message)
@@ -95,26 +92,23 @@ int	sleepin(t_philo *philo, char *message)
 	long	time;
 
 	data = philo->data;
-	time = 0;
+	pthread_mutex_lock(&data->state_mutex);
+	time = get_current_time();
+	if (time - philo->time_eaten >= data->die_ti)
+	{
+		pthread_mutex_unlock(&data->state_mutex);
+		return (-1);
+	}
+	pthread_mutex_unlock(&data->state_mutex);
 	pthread_mutex_lock(&data->death_lock);
 	check = data->death;
 	pthread_mutex_unlock(&data->death_lock);
-	if (!check)
-	{
-		pthread_mutex_lock(&data->state_mutex);
-		time = get_current_time();
-		if (time - philo->time_eaten >= data->die_ti)
-		{
-			pthread_mutex_unlock(&data->state_mutex);
-			return (-1);
-		}
-		pthread_mutex_unlock(&data->state_mutex);
-		pthread_mutex_lock(&data->msg_lock);
-		printf("%ld %d %s\n", time - data->start_time, philo->id, message);
-		pthread_mutex_unlock(&data->msg_lock);
-		if (ft_usleep(data->sle_ti, data) == -1)
-			return (-1);
-		return (0);
-	}
-	return (-1);
+	if (check)
+		return (-1);
+	pthread_mutex_lock(&data->msg_lock);
+	printf("%ld %d %s\n", time - data->start_time, philo->id, message);
+	pthread_mutex_unlock(&data->msg_lock);
+	if (ft_usleep(data->sle_ti, data) == -1)
+		return (-1);
+	return (0);
 }
