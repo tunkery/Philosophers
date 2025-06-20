@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 15:08:11 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/20 08:24:18 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/20 11:01:56 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@ int	philos_be_eatin(t_philo *philo)
 	int		right;
 
 	data = philo->data;
+	// if (philo->id == data->philo_no)
+	// {
+	// 	left = philo->left_fork;
+	// 	right = philo->right_fork;
+	// }
 	if (philo->id % 2)
 	{
 		left = philo->right_fork;
@@ -60,16 +65,18 @@ int	philos_be_eatin(t_philo *philo)
 int	beginning_of_eat(t_philo *philo)
 {
 	t_data	*data;
-	int		id;
+	// int		id;
+	int		fork_index;
 
 	data = philo->data;
-	id = philo->id;
+	// id = philo->id;
+	fork_index = philo->left_fork;
 	if (data->philo_no == 1)
 	{
-		pthread_mutex_lock(&data->fork[id]);
+		pthread_mutex_lock(&data->fork[fork_index]);
 		philo_action(philo, "has taken a fork");
 		ft_usleep(data->sle_ti, data);
-		pthread_mutex_unlock(&data->fork[id]);
+		pthread_mutex_unlock(&data->fork[fork_index]);
 		return (-1);
 	}
 	if (philos_be_eatin(philo) == -1)

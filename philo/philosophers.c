@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:53:07 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/20 09:13:49 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/20 10:52:37 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ void	print_message(t_philo *philo, char *message, int i)
 	// pthread_mutex_unlock(&data->death_lock);
 	time = get_current_time();
 	pthread_mutex_lock(&data->msg_lock);
-	// pthread_mutex_lock(&data->death_lock);
+	pthread_mutex_lock(&data->death_lock);
 	data->death = true;
-	// pthread_mutex_unlock(&data->death_lock);
+	pthread_mutex_unlock(&data->death_lock);
 	printf("%ld %d %s\n", time - data->start_time, i + 1, message);
 	pthread_mutex_unlock(&data->msg_lock);
 }
@@ -102,9 +102,9 @@ void	*routine(void *args)
 			break ;
 		if (thinking(philo, "is thinking") == -1)
 			break ;
-		usleep(1000);
-		// if (ft_usleep(data->die_ti - (data->eat_ti + data->sle_ti), data) == -1)
-		// 	break ;
+		// usleep(1000);
+		if (ft_usleep(data->die_ti - (data->eat_ti + data->sle_ti) * 1000, data) == -1)
+			break ;
 	}
 	return (NULL);
 }
