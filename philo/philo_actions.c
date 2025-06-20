@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 15:08:11 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/20 06:11:24 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/20 08:24:18 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,24 @@ int	philos_be_eatin(t_philo *philo)
 	pthread_mutex_lock(&data->fork[right]);
 	philo_action(philo, "has taken a fork");
 	eat(philo, "is eating");
+	// if (philo_action(philo, "has taken a fork") == -1)
+	// {
+	// 	pthread_mutex_unlock(&data->fork[left]);
+	// 	return (-1);
+	// }
+	// pthread_mutex_lock(&data->fork[right]);
+	// if (philo_action(philo, "has taken a fork") == -1)
+	// {
+	// 	pthread_mutex_unlock(&data->fork[left]);
+	// 	pthread_mutex_unlock(&data->fork[right]);
+	// 	return (-1);
+	// }
+	// if (eat(philo, "is eating") == -1)
+	// {
+	// 	pthread_mutex_unlock(&data->fork[left]);
+	// 	pthread_mutex_unlock(&data->fork[right]);
+	// 	return (-1);
+	// }
 	pthread_mutex_unlock(&data->fork[left]);
 	pthread_mutex_unlock(&data->fork[right]);
 	return (0);
@@ -74,12 +92,20 @@ int	philo_action(t_philo *philo, char *message)
 		return (-1);
 	}
 	pthread_mutex_unlock(&data->state_mutex);
+	// pthread_mutex_lock(&data->death_lock);
+	// check = data->death;
+	// pthread_mutex_unlock(&data->death_lock);
+	// if (check)
+	// 	return (-1);
+	pthread_mutex_lock(&data->msg_lock);
 	pthread_mutex_lock(&data->death_lock);
 	check = data->death;
 	pthread_mutex_unlock(&data->death_lock);
 	if (check)
+	{
+		pthread_mutex_unlock(&data->msg_lock);
 		return (-1);
-	pthread_mutex_lock(&data->msg_lock);
+	}
 	printf("%ld %d %s\n", time - data->start_time, philo->id, message);
 	pthread_mutex_unlock(&data->msg_lock);
 	return (0);
@@ -100,12 +126,20 @@ int	sleepin(t_philo *philo, char *message)
 		return (-1);
 	}
 	pthread_mutex_unlock(&data->state_mutex);
+	// pthread_mutex_lock(&data->death_lock);
+	// check = data->death;
+	// pthread_mutex_unlock(&data->death_lock);
+	// if (check)
+	// 	return (-1);
+	pthread_mutex_lock(&data->msg_lock);
 	pthread_mutex_lock(&data->death_lock);
 	check = data->death;
 	pthread_mutex_unlock(&data->death_lock);
 	if (check)
+	{
+		pthread_mutex_unlock(&data->msg_lock);
 		return (-1);
-	pthread_mutex_lock(&data->msg_lock);
+	}
 	printf("%ld %d %s\n", time - data->start_time, philo->id, message);
 	pthread_mutex_unlock(&data->msg_lock);
 	if (ft_usleep(data->sle_ti, data) == -1)

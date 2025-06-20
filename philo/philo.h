@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:47:32 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/06 15:42:15 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/20 06:37:04 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int		check_args(char **av);
 long	get_current_time(void);
 void	print_message(t_philo *philo, char *message, int i);
 bool	death_check(t_philo *philo);
-void	print_for_eat(t_philo *philo, char *message, long time);
+int		print_for_eat(t_philo *philo, char *message, long time);
 
 // Initialize everything
 

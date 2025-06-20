@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:53:07 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/20 06:11:34 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/20 08:29:54 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,14 @@ void	print_message(t_philo *philo, char *message, int i)
 	long	time;
 
 	data = philo->data;
-	pthread_mutex_lock(&data->death_lock);
-	data->death = true;
-	pthread_mutex_unlock(&data->death_lock);
+	// pthread_mutex_lock(&data->death_lock);
+	// data->death = true;
+	// pthread_mutex_unlock(&data->death_lock);
 	time = get_current_time();
 	pthread_mutex_lock(&data->msg_lock);
+	// pthread_mutex_lock(&data->death_lock);
+	data->death = true;
+	// pthread_mutex_unlock(&data->death_lock);
 	printf("%ld %d %s\n", time - data->start_time, i + 1, message);
 	pthread_mutex_unlock(&data->msg_lock);
 }
@@ -32,7 +35,7 @@ void	*monitoring(void *args)
 	t_philo	*philo;
 	t_data	*data;
 	int		i;
-	// bool	check;
+	long	time;
 
 	philo = args;
 	data = philo->data;
@@ -42,13 +45,15 @@ void	*monitoring(void *args)
 	i = 0;
 	while (1)
 	{
+		// pthread_mutex_lock(&data->state_mutex);
 		while (i < data->philo_no)
 		{
 			// pthread_mutex_lock(&data->death_lock);
 			// check = data->death;
 			// pthread_mutex_unlock(&data->death_lock);
 			pthread_mutex_lock(&data->state_mutex);
-			if (get_current_time() - data->philo[i].time_eaten >= data->die_ti)
+			time = get_current_time();
+			if (time - data->philo[i].time_eaten >= data->die_ti)
 			{
 				print_message(philo, "died", i);
 				pthread_mutex_unlock(&data->state_mutex);
@@ -57,6 +62,7 @@ void	*monitoring(void *args)
 			pthread_mutex_unlock(&data->state_mutex);
 			i++;
 		}
+		// pthread_mutex_unlock(&data->state_mutex);
 		i = 0;
 		usleep(1000);
 	}
@@ -88,6 +94,8 @@ void	*routine(void *args)
 			break ;
 		if (sleepin(philo, "is sleeping") == -1)
 			break ;
+		thinking(philo, "is thinking");
+		// ft_usleep(500, data);
 	}
 	return (NULL);
 }
