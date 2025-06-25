@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:53:07 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/25 13:58:16 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/25 14:04:06 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	*routine(void *args)
 	philo = args;
 	data = philo->data;
 	if (philo->id % 2)
-		usleep(1000);
+		philos_be_thinkin(philo, "is thinking");
 	while (1)
 	{
 		pthread_mutex_lock(&data->state_mutex);

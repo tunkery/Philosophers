@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 13:42:41 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/25 13:57:50 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/25 14:04:40 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,17 @@ int	monitor_helper(t_philo *philo, int i, int *abc)
 	if (data->eat_no > 0 && *abc == data->philo_no)
 		return (-1);
 	return (0);
+}
+
+void	philos_be_thinkin(t_philo *philo, char *message)
+{
+	t_data	*data;
+	long	time;
+
+	data = philo->data;
+	pthread_mutex_lock(&data->msg_lock);
+	time = get_current_time();
+	printf("%ld %d %s\n", time - data->start_time, philo->id, message);
+	pthread_mutex_unlock(&data->msg_lock);
+	usleep(1000);
 }

@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:47:32 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/25 13:57:21 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/25 14:03:45 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ int		philo_action(t_philo *philo, char *message);
 int		eat(t_philo *philo, char *message);
 int		thinking(t_philo *philo, char *message);
 int		sleepin(t_philo *philo, char *message);
+void	philos_be_thinkin(t_philo *philo, char *message);
 
 // Clean-up
 void	clean_up(t_data *data);
