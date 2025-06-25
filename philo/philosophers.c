@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:53:07 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/20 13:21:16 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/25 13:58:16 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,6 @@ void	print_message(t_philo *philo, char *message, int i)
 	long	time;
 
 	data = philo->data;
-	// pthread_mutex_lock(&data->death_lock);
-	// data->death = true;
-	// pthread_mutex_unlock(&data->death_lock);
 	time = get_current_time();
 	pthread_mutex_lock(&data->msg_lock);
 	pthread_mutex_lock(&data->death_lock);
@@ -35,7 +32,6 @@ void	*monitoring(void *args)
 	t_philo	*philo;
 	t_data	*data;
 	int		i;
-	long	time;
 	int		abc;
 
 	abc = 0;
@@ -46,21 +42,7 @@ void	*monitoring(void *args)
 	{
 		while (i < data->philo_no)
 		{
-			pthread_mutex_lock(&data->state_mutex);
-			time = get_current_time();
-			if (time - data->philo[i].time_eaten >= data->die_ti)
-			{
-				if (data->eat_no > 0 && data->philo[i].full)
-					abc++;
-				else
-				{
-					print_message(philo, "died", i);
-					pthread_mutex_unlock(&data->state_mutex);
-					return (NULL);
-				}
-			}
-			pthread_mutex_unlock(&data->state_mutex);
-			if (data->eat_no > 0 && abc == data->philo_no)
+			if (monitor_helper(philo, i, &abc) == -1)
 				return (NULL);
 			i++;
 		}
@@ -88,25 +70,12 @@ void	*routine(void *args)
 			return (NULL);
 		}
 		pthread_mutex_unlock(&data->state_mutex);
-		// if (data->eat_no > 0)
-		// {
-		// 	pthread_mutex_lock(&data->state_mutex);
-		// 	if (philo->meals_eaten == data->eat_no)
-		// 	{
-		// 		pthread_mutex_unlock(&data->state_mutex);
-		// 		return (NULL);
-		// 	}
-		// 	pthread_mutex_unlock(&data->state_mutex);
-		// }
 		if (beginning_of_eat(philo) == -1)
 			break ;
 		if (sleepin(philo, "is sleeping") == -1)
 			break ;
 		if (thinking(philo, "is thinking") == -1)
 			break ;
-		// usleep(1000);
-		// if (ft_usleep((data->die_ti - (data->eat_ti + data->sle_ti) / 2 ), data) == -1)
-		// 	break ;
 	}
 	return (NULL);
 }
@@ -133,10 +102,7 @@ int	main(int ac, char **av)
 	if (!data)
 		return (0);
 	if (init_arguments(data, av) == -1)
-	{
-		clean_up(data);
-		return (0);
-	}
+		return (clean_up_return(data));
 	create_philos(data);
 	clean_up(data);
 	return (0);

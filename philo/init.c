@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:51:35 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/20 13:08:16 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/25 13:47:28 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int	init_data(t_data *data)
 	{
 		pthread_mutex_init(&data->fork[i], NULL);
 		data->philo[i].data = data;
-		data->philo[i].meals_eaten = 0;
+		data->philo[i].m_eaten = 0;
 		data->philo[i].time_eaten = data->start_time;
 		data->philo[i].start_time = data->start_time;
 		data->philo[i].id = i + 1;

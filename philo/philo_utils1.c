@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:11:15 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/20 13:29:04 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/25 13:47:28 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,14 +64,10 @@ int	thinking(t_philo *philo, char *message)
 	check = data->death;
 	pthread_mutex_unlock(&data->death_lock);
 	if (check)
-	{
-		pthread_mutex_unlock(&data->msg_lock);
-		return (-1);
-	}
+		return (unlock_msg(data));
 	printf("%ld %d %s\n", time - data->start_time, philo->id, message);
 	pthread_mutex_unlock(&data->msg_lock);
-	ft_usleep(data->die_ti - (data->eat_ti + data->sle_ti) * 1000, data);
-	// usleep(data->die_ti - (data->eat_ti + data->sle_ti) * 1000);
+	usleep(data->die_ti - (data->eat_ti + data->sle_ti));
 	return (0);
 }
 
@@ -97,7 +93,6 @@ int	ft_usleep(long ms, t_data *data)
 int	eat(t_philo *philo, char *message)
 {
 	t_data	*data;
-	// bool	check;
 	long	time;
 
 	data = philo->data;
@@ -108,7 +103,7 @@ int	eat(t_philo *philo, char *message)
 		pthread_mutex_unlock(&data->state_mutex);
 		return (-1);
 	}
-	philo->meals_eaten++;
+	philo->m_eaten++;
 	philo->time_eaten = time;
 	pthread_mutex_unlock(&data->state_mutex);
 	if (print_for_eat(philo, message, time) == -1)

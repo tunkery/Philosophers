@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 15:08:11 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/20 13:09:25 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/25 13:47:28 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,13 @@ int	philos_be_eatin(t_philo *philo)
 int	beginning_of_eat(t_philo *philo)
 {
 	t_data	*data;
-	// int		id;
 	int		fork_index;
 
 	data = philo->data;
 	if (data->eat_no > 0)
 	{
 		pthread_mutex_lock(&data->state_mutex);
-		if (philo->meals_eaten == data->eat_no)
+		if (philo->m_eaten == data->eat_no)
 		{
 			philo->full = true;
 			pthread_mutex_unlock(&data->state_mutex);
@@ -60,10 +59,7 @@ int	beginning_of_eat(t_philo *philo)
 	fork_index = philo->left_fork;
 	if (data->philo_no == 1)
 	{
-		pthread_mutex_lock(&data->fork[fork_index]);
-		philo_action(philo, "has taken a fork");
-		ft_usleep(data->sle_ti, data);
-		pthread_mutex_unlock(&data->fork[fork_index]);
+		one_philo(philo, fork_index);
 		return (-1);
 	}
 	if (philos_be_eatin(philo) == -1)
@@ -100,6 +96,12 @@ int	philo_action(t_philo *philo, char *message)
 	return (0);
 }
 
+int	unlock_msg(t_data *data)
+{
+	pthread_mutex_unlock(&data->msg_lock);
+	return (-1);
+}
+
 int	sleepin(t_philo *philo, char *message)
 {
 	t_data	*data;
@@ -120,10 +122,7 @@ int	sleepin(t_philo *philo, char *message)
 	check = data->death;
 	pthread_mutex_unlock(&data->death_lock);
 	if (check)
-	{
-		pthread_mutex_unlock(&data->msg_lock);
-		return (-1);
-	}
+		return (unlock_msg(data));
 	printf("%ld %d %s\n", time - data->start_time, philo->id, message);
 	pthread_mutex_unlock(&data->msg_lock);
 	if (ft_usleep(data->sle_ti, data) == -1)

@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:47:32 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/20 13:27:44 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/25 13:57:21 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ typedef struct s_philo
 	int				id;
 	int				left_fork;
 	int				right_fork;
-	int				meals_eaten;
+	int				m_eaten;
 	long			time_eaten;
 	long			start_time;
 	bool			full;
@@ -63,6 +63,9 @@ long	get_current_time(void);
 void	print_message(t_philo *philo, char *message, int i);
 bool	death_check(t_philo *philo);
 int		print_for_eat(t_philo *philo, char *message, long time);
+int		unlock_msg(t_data *data);
+void	one_philo(t_philo *philo, int fork_index);
+int		monitor_helper(t_philo *philo, int i, int *abc);
 
 // Initialize everything
 
@@ -83,5 +86,6 @@ int		sleepin(t_philo *philo, char *message);
 
 // Clean-up
 void	clean_up(t_data *data);
+int		clean_up_return(t_data *data);
 
 #endif

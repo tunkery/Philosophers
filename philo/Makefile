@@ -6,11 +6,11 @@
 #    By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/08 18:46:22 by bolcay            #+#    #+#              #
-#    Updated: 2025/06/06 15:08:48 by bolcay           ###   ########.fr        #
+#    Updated: 2025/06/25 13:44:45 by bolcay           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS = init.c philosophers.c philo_utils.c philo_utils1.c clean_up.c philo_actions.c
+SRCS = init.c philosophers.c philo_utils.c philo_utils1.c clean_up.c philo_actions.c philo_utils2.c
 
 OBJS = $(SRCS:.c=.o)
 NAME = philo

@@ -6,7 +6,7 @@
 /*   By: bolcay <bolcay@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 12:35:26 by bolcay            #+#    #+#             */
-/*   Updated: 2025/06/06 14:48:13 by bolcay           ###   ########.fr       */
+/*   Updated: 2025/06/25 13:45:56 by bolcay           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,10 @@ void	clean_up(t_data *data)
 	free(data->philo);
 	free(data->fork);
 	free(data);
+}
+
+int	clean_up_return(t_data *data)
+{
+	clean_up(data);
+	return (0);
 }
